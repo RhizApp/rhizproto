@@ -1,11 +1,17 @@
 /**
  * Firehose Ingestor
  * Subscribes to AT Protocol firehose and ingests relationship signals
+ * Now includes support for native net.rhiz.* records
  */
 
 import { Firehose } from '@atproto/sync';
 import WebSocket from 'ws';
 import { config } from '../config';
+import {
+  RelationshipIndexer,
+  IndexerCallbacks,
+  IndexedRelationship,
+} from '../indexer/relationship_indexer';
 
 interface FirehoseEvent {
   did: string;
@@ -20,6 +26,7 @@ interface FirehoseEvent {
 
 class FirehoseIngestor {
   private firehose: Firehose<unknown> | null = null;
+  private rhizIndexer: RelationshipIndexer | null = null;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 10;
 
@@ -27,7 +34,36 @@ class FirehoseIngestor {
     console.log('🔥 Starting Firehose Ingestor...');
     console.log(`Connecting to: ${config.atproto.firehoseUrl}`);
 
+    // Start Rhiz-specific indexer
+    await this.startRhizIndexer();
+
+    // Start main firehose (for app.bsky.* signals)
     await this.connect();
+  }
+
+  /**
+   * Start the Rhiz Protocol indexer for net.rhiz.* records
+   */
+  private async startRhizIndexer(): Promise<void> {
+    console.log('🌐 Starting Rhiz Protocol indexer...');
+
+    const callbacks: IndexerCallbacks = {
+      onRelationshipCreated: this.handleRhizRelationshipCreated.bind(this),
+      onRelationshipUpdated: this.handleRhizRelationshipUpdated.bind(this),
+      onRelationshipDeleted: this.handleRhizRelationshipDeleted.bind(this),
+      onProfileCreated: this.handleRhizProfileCreated.bind(this),
+      onError: (error) => {
+        console.error('❌ Rhiz indexer error:', error);
+      },
+    };
+
+    this.rhizIndexer = new RelationshipIndexer(
+      config.atproto.firehoseUrl,
+      callbacks,
+    );
+
+    await this.rhizIndexer.start();
+    console.log('✅ Rhiz Protocol indexer started');
   }
 
   private async connect(): Promise<void> {
@@ -92,6 +128,59 @@ class FirehoseIngestor {
     console.log(`🔄 Repost event: ${did} - ${operation}`);
   }
 
+  /**
+   * Handle native Rhiz relationship record creation
+   */
+  private async handleRhizRelationshipCreated(
+    relationship: IndexedRelationship,
+  ): Promise<void> {
+    console.log(`🤝 Rhiz Relationship Created: ${relationship.uri}`);
+    console.log(
+      `   Participants: ${relationship.participants[0]} <-> ${relationship.participants[1]}`,
+    );
+    console.log(`   Type: ${relationship.type}, Strength: ${relationship.strength}`);
+
+    // TODO: Store in PostgreSQL for graph queries
+    // TODO: Publish to Redis for real-time updates
+    // TODO: Update trust metrics
+  }
+
+  /**
+   * Handle native Rhiz relationship record update
+   */
+  private async handleRhizRelationshipUpdated(
+    relationship: IndexedRelationship,
+  ): Promise<void> {
+    console.log(`🔄 Rhiz Relationship Updated: ${relationship.uri}`);
+
+    // TODO: Update PostgreSQL record
+    // TODO: Recalculate trust metrics
+  }
+
+  /**
+   * Handle native Rhiz relationship record deletion
+   */
+  private async handleRhizRelationshipDeleted(uri: string): Promise<void> {
+    console.log(`🗑️  Rhiz Relationship Deleted: ${uri}`);
+
+    // TODO: Remove from PostgreSQL
+    // TODO: Recalculate trust metrics
+  }
+
+  /**
+   * Handle native Rhiz profile creation
+   */
+  private async handleRhizProfileCreated(profile: {
+    uri: string
+    did: string
+    displayName: string
+    entityType: string
+  }): Promise<void> {
+    console.log(`👤 Rhiz Profile Created: ${profile.displayName} (${profile.did})`);
+
+    // TODO: Store in PostgreSQL entities table
+  }
+
   private handleReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
       console.error('Max reconnection attempts reached. Exiting.');
@@ -107,6 +196,9 @@ class FirehoseIngestor {
 
   async stop(): void {
     console.log('Stopping Firehose Ingestor...');
+    if (this.rhizIndexer) {
+      this.rhizIndexer.stop();
+    }
     // Cleanup
   }
 }
