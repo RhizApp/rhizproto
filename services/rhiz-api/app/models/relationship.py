@@ -40,17 +40,29 @@ class ConsentLevel(str, PyEnum):
 
 
 class Relationship(Base):
-    """Relationship model"""
+    """
+    Relationship model - DID-native with AT Protocol content-addressing
+    Source of truth: AT Protocol repos
+    Database: Fast query index
+    """
 
     __tablename__ = "relationships"
 
-    id: Mapped[str] = mapped_column(String(255), primary_key=True)
-    entity_a_id: Mapped[str] = mapped_column(
-        String(255), ForeignKey("entities.id"), nullable=False, index=True
+    # AT Protocol record references (source of truth)
+    at_uri: Mapped[str] = mapped_column(
+        String(500), primary_key=True, index=True
+    )  # at://did:plc:alice/net.rhiz.relationship.record/tid
+    cid: Mapped[str] = mapped_column(String(255), nullable=False)  # Content ID
+
+    # Participants (DIDs)
+    participant_did_1: Mapped[str] = mapped_column(
+        String(255), ForeignKey("entities.did"), nullable=False, index=True
     )
-    entity_b_id: Mapped[str] = mapped_column(
-        String(255), ForeignKey("entities.id"), nullable=False, index=True
+    participant_did_2: Mapped[str] = mapped_column(
+        String(255), ForeignKey("entities.did"), nullable=False, index=True
     )
+
+    # Relationship data (indexed for fast queries)
     type: Mapped[RelationshipType] = mapped_column(Enum(RelationshipType), nullable=False)
     strength: Mapped[float] = mapped_column(Float, nullable=False)  # 0.0-1.0
     context: Mapped[str] = mapped_column(Text, nullable=False)
@@ -75,8 +87,10 @@ class Relationship(Base):
     # Protocol metadata
     contributors: Mapped[list] = mapped_column(
         JSONB, nullable=False, default=list
-    )  # Array of entity IDs
+    )  # Array of DIDs
     version: Mapped[str] = mapped_column(String(50), nullable=False)
+
+    # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, nullable=False
     )
@@ -85,10 +99,11 @@ class Relationship(Base):
     )
 
     __table_args__ = (
-        Index("ix_relationships_entities", "entity_a_id", "entity_b_id"),
+        Index("ix_relationships_participants", "participant_did_1", "participant_did_2"),
         Index("ix_relationships_type_strength", "type", "strength"),
+        Index("ix_relationships_cid", "cid"),
     )
 
     def __repr__(self) -> str:
-        return f"<Relationship {self.id} ({self.type}): {self.entity_a_id} <-> {self.entity_b_id}>"
+        return f"<Relationship {self.at_uri} ({self.type}): {self.participant_did_1} <-> {self.participant_did_2}>"
 

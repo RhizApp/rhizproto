@@ -20,18 +20,29 @@ class EntityType(str, PyEnum):
 
 
 class Entity(Base):
-    """Entity model"""
+    """
+    Entity model - DID-native
+    Primary key is now the DID, following AT Protocol best practices
+    """
 
     __tablename__ = "entities"
 
-    id: Mapped[str] = mapped_column(String(255), primary_key=True)
+    # DID is now the primary key
+    did: Mapped[str] = mapped_column(String(255), primary_key=True)
+
+    # AT Protocol record references
+    profile_uri: Mapped[str | None] = mapped_column(String(500), index=True)
+    profile_cid: Mapped[str | None] = mapped_column(String(255))
+
+    # Entity information
     type: Mapped[EntityType] = mapped_column(Enum(EntityType), nullable=False)
-    did: Mapped[str | None] = mapped_column(String(255), unique=True, index=True)
     handle: Mapped[str | None] = mapped_column(String(255), unique=True, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     bio: Mapped[str | None] = mapped_column(Text)
     avatar_url: Mapped[str | None] = mapped_column(String(500))
     verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+    # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, nullable=False
     )
@@ -45,5 +56,5 @@ class Entity(Base):
     )
 
     def __repr__(self) -> str:
-        return f"<Entity {self.id} ({self.type}): {self.name}>"
+        return f"<Entity {self.did} ({self.type}): {self.name}>"
 
