@@ -22,28 +22,28 @@
           "description": "DID of the entity these metrics describe"
         },
         "trustScore": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Overall trust score (0.0-1.0)"
+          "maximum": 100,
+          "description": "Overall trust score (0-100, scaled from 0.0-1.0)"
         },
         "reputation": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Reputation score based on network consensus"
+          "maximum": 100,
+          "description": "Reputation score based on network consensus (0-100)"
         },
         "reciprocity": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Reciprocity score (mutual relationships)"
+          "maximum": 100,
+          "description": "Reciprocity score for mutual relationships (0-100)"
         },
         "consistency": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Consistency score (stable relationships over time)"
+          "maximum": 100,
+          "description": "Consistency score for stable relationships (0-100)"
         },
         "relationshipCount": {
           "type": "integer",

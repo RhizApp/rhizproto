@@ -2,6 +2,21 @@
   "lexicon": 1,
   "id": "net.rhiz.relationship.defs",
   "defs": {
+    "signatureData": {
+      "type": "object",
+      "description": "Cryptographic signature from a participant",
+      "required": ["did", "signature"],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "signature": {
+          "type": "string",
+          "description": "Base64-encoded signature"
+        }
+      }
+    },
     "relationshipType": {
       "type": "string",
       "description": "Type of relationship",
@@ -30,10 +45,10 @@
       "required": ["consensusScore", "verifierCount", "confidence", "lastVerified"],
       "properties": {
         "consensusScore": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Consensus score from verifiers (0.0-1.0)"
+          "maximum": 100,
+          "description": "Consensus score from verifiers (0-100, scaled from 0.0-1.0)"
         },
         "verifierCount": {
           "type": "integer",
@@ -41,10 +56,10 @@
           "description": "Number of entities that verified this relationship"
         },
         "confidence": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Confidence level in verification (0.0-1.0)"
+          "maximum": 100,
+          "description": "Confidence level in verification (0-100, scaled from 0.0-1.0)"
         },
         "lastVerified": {
           "type": "string",
@@ -86,9 +101,10 @@
           "format": "datetime"
         },
         "strength": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1
+          "maximum": 100,
+          "description": "Strength score (0-100, scaled from 0.0-1.0)"
         },
         "event": {
           "type": "string",

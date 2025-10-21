@@ -28,10 +28,10 @@
           "description": "CID of the relationship record"
         },
         "strength": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Relationship strength"
+          "maximum": 100,
+          "description": "Relationship strength (0-100, scaled from 0.0-1.0)"
         }
       }
     },
@@ -59,10 +59,10 @@
           "description": "Sequence of hops connecting the entities"
         },
         "totalStrength": {
-          "type": "number",
+          "type": "integer",
           "minimum": 0,
-          "maximum": 1,
-          "description": "Weighted product of hop strengths"
+          "maximum": 100,
+          "description": "Weighted product of hop strengths (0-100)"
         },
         "distance": {
           "type": "integer",

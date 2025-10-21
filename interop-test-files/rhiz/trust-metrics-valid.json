@@ -1,9 +1,9 @@
 {
   "$type": "net.rhiz.trust.metrics",
-  "trustScore": 0.88,
-  "reputation": 0.91,
-  "reciprocity": 0.85,
-  "consistency": 0.89,
+  "trustScore": 88,
+  "reputation": 91,
+  "reciprocity": 85,
+  "consistency": 89,
   "relationshipCount": 47,
   "verifiedRelationshipCount": 42,
   "calculatedAt": "2025-10-20T12:00:00Z"

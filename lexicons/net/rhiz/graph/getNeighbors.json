@@ -15,19 +15,18 @@
             "description": "Entity DID to get neighbors for"
           },
           "minStrength": {
-            "type": "number",
+            "type": "integer",
             "minimum": 0,
-            "maximum": 1,
-            "default": 0.0,
-            "description": "Minimum relationship strength to include"
+            "maximum": 100,
+            "default": 0,
+            "description": "Minimum relationship strength to include (0-100)"
           },
           "relationshipTypes": {
             "type": "array",
             "items": {
-              "type": "ref",
-              "ref": "net.rhiz.relationship.defs#relationshipType"
+              "type": "string"
             },
-            "description": "Optional filter by relationship types"
+            "description": "Optional filter by relationship types (professional, personal, etc)"
           },
           "limit": {
             "type": "integer",
@@ -45,44 +44,53 @@
       "output": {
         "encoding": "application/json",
         "schema": {
-          "type": "object",
-          "required": ["neighbors"],
-          "properties": {
-            "neighbors": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["entity", "relationshipUri", "strength"],
-                "properties": {
-                  "entity": {
-                    "type": "ref",
-                    "ref": "net.rhiz.entity.defs#entityView"
-                  },
-                  "relationshipUri": {
-                    "type": "string",
-                    "format": "at-uri"
-                  },
-                  "relationshipCid": {
-                    "type": "string",
-                    "format": "cid"
-                  },
-                  "strength": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                  },
-                  "type": {
-                    "type": "ref",
-                    "ref": "net.rhiz.relationship.defs#relationshipType"
-                  }
-                }
-              }
-            },
-            "cursor": {
-              "type": "string",
-              "description": "Pagination cursor for next page"
-            }
+          "type": "ref",
+          "ref": "#neighborsList"
+        }
+      }
+    },
+    "neighborsList": {
+      "type": "object",
+      "required": ["neighbors"],
+      "properties": {
+        "neighbors": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#neighborItem"
           }
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Pagination cursor for next page"
+        }
+      }
+    },
+    "neighborItem": {
+      "type": "object",
+      "required": ["entity", "relationshipUri", "strength"],
+      "properties": {
+        "entity": {
+          "type": "ref",
+          "ref": "net.rhiz.entity.defs#entityView"
+        },
+        "relationshipUri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "relationshipCid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "strength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Relationship strength (0-100)"
+        },
+        "type": {
+          "type": "string",
+          "description": "Relationship type"
         }
       }
     }

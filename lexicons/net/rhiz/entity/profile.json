@@ -36,9 +36,8 @@
             "description": "Whether this entity is verified"
           },
           "metadata": {
-            "type": "object",
-            "description": "Additional metadata",
-            "properties": {}
+            "type": "unknown",
+            "description": "Additional metadata (flexible JSON object)"
           },
           "createdAt": {
             "type": "string",

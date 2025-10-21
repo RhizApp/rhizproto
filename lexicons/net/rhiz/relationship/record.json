@@ -35,10 +35,10 @@
             "description": "Type of relationship"
           },
           "strength": {
-            "type": "number",
+            "type": "integer",
             "minimum": 0,
-            "maximum": 1,
-            "description": "Normalized trust score (0.0-1.0)"
+            "maximum": 100,
+            "description": "Normalized trust score (0-100, scaled from 0.0-1.0)"
           },
           "context": {
             "type": "string",
@@ -63,18 +63,8 @@
           "signatures": {
             "type": "array",
             "items": {
-              "type": "object",
-              "required": ["did", "signature"],
-              "properties": {
-                "did": {
-                  "type": "string",
-                  "format": "did"
-                },
-                "signature": {
-                  "type": "string",
-                  "description": "Base64-encoded signature"
-                }
-              }
+              "type": "ref",
+              "ref": "net.rhiz.relationship.defs#signatureData"
             },
             "description": "Cryptographic signatures from participants"
           },

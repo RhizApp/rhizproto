@@ -27,19 +27,18 @@
             "description": "Maximum number of hops to search"
           },
           "minStrength": {
-            "type": "number",
+            "type": "integer",
             "minimum": 0,
-            "maximum": 1,
-            "default": 0.5,
-            "description": "Minimum relationship strength to consider"
+            "maximum": 100,
+            "default": 50,
+            "description": "Minimum relationship strength to consider (0-100, default 50)"
           },
           "relationshipTypes": {
             "type": "array",
             "items": {
-              "type": "ref",
-              "ref": "net.rhiz.relationship.defs#relationshipType"
+              "type": "string"
             },
-            "description": "Optional filter by relationship types"
+            "description": "Optional filter by relationship types (professional, personal, etc)"
           },
           "excludeDids": {
             "type": "array",
