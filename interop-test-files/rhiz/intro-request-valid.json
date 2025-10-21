@@ -1,0 +1,13 @@
+{
+  "$type": "net.rhiz.intro.request",
+  "requester": "did:plc:requester123abc456def789ghi012jkl",
+  "target": "did:plc:target456xyz789uvw123rst456opq",
+  "intermediary": "did:plc:intermediary789def012ghi345jkl678mno",
+  "context": "Seeking investment for AI-powered social network startup",
+  "message": "Hi, I'm building a decentralized social network with advanced AI features. I'd love to discuss potential investment opportunities and get your insights on the space.",
+  "status": "pending",
+  "pathRef": "at://did:plc:requester123abc456def789ghi012jkl/net.rhiz.graph.path/3jx7ytmdwej2k",
+  "createdAt": "2025-10-20T10:00:00Z",
+  "updatedAt": "2025-10-20T10:00:00Z"
+}
+

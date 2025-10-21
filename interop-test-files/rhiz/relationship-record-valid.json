@@ -1,0 +1,58 @@
+{
+  "$type": "net.rhiz.relationship.record",
+  "participants": [
+    "did:plc:abc123def456ghi789jkl012mno345pqr",
+    "did:plc:xyz789uvw456rst123opq890lmn567klm"
+  ],
+  "type": "professional",
+  "strength": 0.85,
+  "context": "Co-founded startup TechCo in 2020, worked together for 3 years",
+  "verification": {
+    "consensusScore": 0.92,
+    "verifierCount": 7,
+    "confidence": 0.95,
+    "lastVerified": "2025-10-15T14:30:00Z",
+    "verifiers": [
+      "did:plc:verifier1abc123def456ghi789jkl",
+      "did:plc:verifier2xyz789uvw456rst123opq",
+      "did:plc:verifier3def456ghi789jkl012mno"
+    ]
+  },
+  "privacy": {
+    "visibility": "network",
+    "consent": "limited"
+  },
+  "temporal": {
+    "start": "2020-01-15T00:00:00Z",
+    "lastInteraction": "2025-10-14T18:45:00Z",
+    "history": [
+      {
+        "timestamp": "2020-01-15T00:00:00Z",
+        "strength": 0.7,
+        "event": "Started collaboration"
+      },
+      {
+        "timestamp": "2021-06-01T00:00:00Z",
+        "strength": 0.8,
+        "event": "Successful product launch"
+      },
+      {
+        "timestamp": "2023-03-15T00:00:00Z",
+        "strength": 0.85,
+        "event": "Raised Series A together"
+      }
+    ]
+  },
+  "signatures": [
+    {
+      "did": "did:plc:abc123def456ghi789jkl012mno345pqr",
+      "signature": "cGxhY2Vob2xkZXJfc2lnbmF0dXJlX2Zvcl9wYXJ0aWNpcGFudF8x"
+    },
+    {
+      "did": "did:plc:xyz789uvw456rst123opq890lmn567klm",
+      "signature": "cGxhY2Vob2xkZXJfc2lnbmF0dXJlX2Zvcl9wYXJ0aWNpcGFudF8y"
+    }
+  ],
+  "createdAt": "2020-01-15T00:00:00Z"
+}
+

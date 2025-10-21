@@ -1,0 +1,15 @@
+{
+  "$type": "net.rhiz.entity.profile",
+  "displayName": "Alice Chen",
+  "entityType": "person",
+  "bio": "Founder & CEO at TechCo. Building the future of decentralized social networks. Previously @ Google, MIT.",
+  "avatarUrl": "https://example.com/avatars/alice.jpg",
+  "verified": true,
+  "metadata": {
+    "location": "San Francisco, CA",
+    "website": "https://alice.tech",
+    "interests": ["decentralization", "social-networks", "AI"]
+  },
+  "createdAt": "2020-01-10T12:00:00Z"
+}
+
