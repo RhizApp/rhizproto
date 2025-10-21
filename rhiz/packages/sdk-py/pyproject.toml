@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "rhiz-sdk"
+version = "0.1.0"
+description = "Python SDK for Rhiz Protocol API"
+authors = ["Rhiz Team <team@rhiz.network>"]
+readme = "README.md"
+packages = [{include = "rhiz_sdk"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+httpx = "^0.26.0"
+pydantic = "^2.5.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.4"
+pytest-asyncio = "^0.23.3"
+pytest-cov = "^4.1.0"
+ruff = "^0.1.11"
+black = "^23.12.1"
+mypy = "^1.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "I", "N", "W", "B", "C4", "UP"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
