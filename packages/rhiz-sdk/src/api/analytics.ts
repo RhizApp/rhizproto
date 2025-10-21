@@ -3,7 +3,7 @@
  */
 
 import type { AxiosInstance } from 'axios';
-import type { TrustMetrics } from '@rhiz/protocol';
+import type { TrustMetrics } from '@atproto/rhiz-protocol';
 
 export interface TrustHealthResponse {
   entity_id: string;

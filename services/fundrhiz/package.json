@@ -1,5 +1,5 @@
 {
-  "name": "@rhiz/web",
+  "name": "@atproto/fundrhiz",
   "version": "0.1.0",
   "description": "FundRhiz - Relationship-driven fundraising platform",
   "private": true,
@@ -14,7 +14,7 @@
     "clean": "rm -rf .next"
   },
   "dependencies": {
-    "@rhiz/protocol": "workspace:*",
+    "@atproto/rhiz-protocol": "workspace:*",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

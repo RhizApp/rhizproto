@@ -3,7 +3,7 @@
  */
 
 import type { AxiosInstance } from 'axios';
-import type { Entity } from '@rhiz/protocol';
+import type { Entity } from '@atproto/rhiz-protocol';
 
 export interface CreateEntityRequest {
   id: string;

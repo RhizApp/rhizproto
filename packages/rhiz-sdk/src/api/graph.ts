@@ -3,7 +3,7 @@
  */
 
 import type { AxiosInstance } from 'axios';
-import type { GraphPathResponse, GraphQueryRequest } from '@rhiz/protocol';
+import type { GraphPathResponse, GraphQueryRequest } from '@atproto/rhiz-protocol';
 
 export class GraphAPI {
   constructor(private client: AxiosInstance) {}

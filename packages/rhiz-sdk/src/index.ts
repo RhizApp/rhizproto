@@ -18,7 +18,7 @@ export type {
   IntroRequest,
   Visibility,
   ConsentLevel,
-} from '@rhiz/protocol';
+} from '@atproto/rhiz-protocol';
 
 // Export API-specific types
 export type { CreateEntityRequest, UpdateEntityRequest } from './api/entities';

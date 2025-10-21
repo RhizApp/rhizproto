@@ -1,5 +1,5 @@
 {
-  "name": "@rhiz/atproto",
+  "name": "@atproto/rhiz-atproto",
   "version": "0.1.0",
   "description": "AT Protocol integration services for Rhiz",
   "main": "dist/index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "@rhiz/docs",
+  "name": "@atproto/rhiz-docs",
   "version": "0.1.0",
   "description": "Documentation for Rhiz Protocol",
   "private": true,

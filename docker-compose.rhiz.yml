@@ -35,7 +35,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      dockerfile: services/rhiz-api/Dockerfile
     container_name: rhiz-api
     ports:
       - '8000:8000'
@@ -48,7 +48,7 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./apps/api:/app
+      - ./services/rhiz-api:/app
     command: poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     profiles:
       - full
@@ -56,8 +56,8 @@ services:
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
-    container_name: rhiz-web
+      dockerfile: services/fundrhiz/Dockerfile
+    container_name: fundrhiz-web
     ports:
       - '3000:3000'
     environment:
@@ -65,7 +65,7 @@ services:
     depends_on:
       - api
     volumes:
-      - ./apps/web:/app
+      - ./services/fundrhiz:/app
       - /app/node_modules
       - /app/.next
     command: pnpm dev
@@ -75,12 +75,12 @@ services:
   docs:
     build:
       context: .
-      dockerfile: apps/docs/Dockerfile
+      dockerfile: services/rhiz-docs/Dockerfile
     container_name: rhiz-docs
     ports:
       - '3001:3000'
     volumes:
-      - ./apps/docs:/app
+      - ./services/rhiz-docs:/app
       - /app/node_modules
     command: pnpm start
     profiles:
