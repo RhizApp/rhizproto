@@ -1,0 +1,92 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: rhiz-postgres
+    environment:
+      POSTGRES_DB: rhiz
+      POSTGRES_USER: rhiz
+      POSTGRES_PASSWORD: rhiz
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U rhiz']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: rhiz-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: rhiz-api
+    ports:
+      - '8000:8000'
+    environment:
+      - DATABASE_URL=postgresql://rhiz:rhiz@postgres:5432/rhiz
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/api:/app
+    command: poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles:
+      - full
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: rhiz-web
+    ports:
+      - '3000:3000'
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - api
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    command: pnpm dev
+    profiles:
+      - full
+
+  docs:
+    build:
+      context: .
+      dockerfile: apps/docs/Dockerfile
+    container_name: rhiz-docs
+    ports:
+      - '3001:3000'
+    volumes:
+      - ./apps/docs:/app
+      - /app/node_modules
+    command: pnpm start
+    profiles:
+      - full
+
+volumes:
+  postgres_data:
+  redis_data:
+
