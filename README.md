@@ -1,4 +1,4 @@
-# Rhiz Protocol - The Relationship Layer of the Internet
+# Rhiz Protocol - The Relationship Layer of the Web
 
 **AT Protocol Native | Federation-Ready | User-Owned Data**
 
