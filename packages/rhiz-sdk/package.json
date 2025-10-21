@@ -25,6 +25,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@atproto/api": "workspace:*",
     "@atproto/rhiz-protocol": "workspace:*",
     "axios": "^1.6.5",
     "zod": "^3.22.4"
