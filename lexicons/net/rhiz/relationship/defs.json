@@ -1,0 +1,127 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.relationship.defs",
+  "defs": {
+    "relationshipType": {
+      "type": "string",
+      "description": "Type of relationship",
+      "knownValues": [
+        "professional",
+        "personal",
+        "family",
+        "social",
+        "civic",
+        "educational"
+      ]
+    },
+    "visibility": {
+      "type": "string",
+      "description": "Visibility level for relationship data",
+      "knownValues": ["public", "network", "private"]
+    },
+    "consentLevel": {
+      "type": "string",
+      "description": "Consent level for data usage",
+      "knownValues": ["full", "limited", "anonymous"]
+    },
+    "verification": {
+      "type": "object",
+      "description": "Verification data for a relationship",
+      "required": ["consensusScore", "verifierCount", "confidence", "lastVerified"],
+      "properties": {
+        "consensusScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Consensus score from verifiers (0.0-1.0)"
+        },
+        "verifierCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of entities that verified this relationship"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence level in verification (0.0-1.0)"
+        },
+        "lastVerified": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When relationship was last verified"
+        },
+        "verifiers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "did"
+          },
+          "description": "DIDs of entities that verified this relationship"
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "description": "Privacy settings for a relationship",
+      "required": ["visibility", "consent"],
+      "properties": {
+        "visibility": {
+          "type": "ref",
+          "ref": "#visibility"
+        },
+        "consent": {
+          "type": "ref",
+          "ref": "#consentLevel"
+        }
+      }
+    },
+    "strengthHistoryPoint": {
+      "type": "object",
+      "description": "Historical strength data point",
+      "required": ["timestamp", "strength"],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "event": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional description of what changed"
+        }
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "description": "Temporal data for a relationship",
+      "required": ["start", "lastInteraction"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When relationship started"
+        },
+        "lastInteraction": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Most recent interaction"
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#strengthHistoryPoint"
+          },
+          "description": "Historical strength data points"
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,76 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.graph.defs",
+  "defs": {
+    "graphHop": {
+      "type": "object",
+      "description": "A single hop in a graph path",
+      "required": ["from", "to", "relationshipUri", "strength"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "format": "did",
+          "description": "Source entity DID"
+        },
+        "to": {
+          "type": "string",
+          "format": "did",
+          "description": "Destination entity DID"
+        },
+        "relationshipUri": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "AT URI of the relationship record"
+        },
+        "relationshipCid": {
+          "type": "string",
+          "format": "cid",
+          "description": "CID of the relationship record"
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Relationship strength"
+        }
+      }
+    },
+    "graphPath": {
+      "type": "object",
+      "description": "A path between two entities through the relationship graph",
+      "required": ["from", "to", "hops", "totalStrength", "distance"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "format": "did",
+          "description": "Start entity DID"
+        },
+        "to": {
+          "type": "string",
+          "format": "did",
+          "description": "End entity DID"
+        },
+        "hops": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#graphHop"
+          },
+          "description": "Sequence of hops connecting the entities"
+        },
+        "totalStrength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Weighted product of hop strengths"
+        },
+        "distance": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of hops"
+        }
+      }
+    }
+  }
+}
+

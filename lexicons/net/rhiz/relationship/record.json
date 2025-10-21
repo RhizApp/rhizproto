@@ -1,0 +1,90 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.relationship.record",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Core relationship record in Rhiz Protocol. Represents a verified trust relationship between two entities. Stored in the initiator's repository.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "participants",
+          "type",
+          "strength",
+          "context",
+          "verification",
+          "privacy",
+          "temporal",
+          "createdAt"
+        ],
+        "properties": {
+          "participants": {
+            "type": "array",
+            "minLength": 2,
+            "maxLength": 2,
+            "items": {
+              "type": "string",
+              "format": "did"
+            },
+            "description": "The two entities in this relationship (as DIDs)"
+          },
+          "type": {
+            "type": "ref",
+            "ref": "net.rhiz.relationship.defs#relationshipType",
+            "description": "Type of relationship"
+          },
+          "strength": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Normalized trust score (0.0-1.0)"
+          },
+          "context": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Domain or project context for this relationship"
+          },
+          "verification": {
+            "type": "ref",
+            "ref": "net.rhiz.relationship.defs#verification",
+            "description": "Verification data"
+          },
+          "privacy": {
+            "type": "ref",
+            "ref": "net.rhiz.relationship.defs#privacy",
+            "description": "Privacy settings"
+          },
+          "temporal": {
+            "type": "ref",
+            "ref": "net.rhiz.relationship.defs#temporal",
+            "description": "Temporal data"
+          },
+          "signatures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["did", "signature"],
+              "properties": {
+                "did": {
+                  "type": "string",
+                  "format": "did"
+                },
+                "signature": {
+                  "type": "string",
+                  "description": "Base64-encoded signature"
+                }
+              }
+            },
+            "description": "Cryptographic signatures from participants"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
+

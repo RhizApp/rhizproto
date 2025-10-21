@@ -1,0 +1,67 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.trust.defs",
+  "defs": {
+    "trustMetrics": {
+      "type": "object",
+      "description": "Trust metrics for an entity",
+      "required": [
+        "entityDid",
+        "trustScore",
+        "reputation",
+        "reciprocity",
+        "consistency",
+        "relationshipCount",
+        "verifiedRelationshipCount",
+        "lastCalculated"
+      ],
+      "properties": {
+        "entityDid": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the entity these metrics describe"
+        },
+        "trustScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Overall trust score (0.0-1.0)"
+        },
+        "reputation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Reputation score based on network consensus"
+        },
+        "reciprocity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Reciprocity score (mutual relationships)"
+        },
+        "consistency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Consistency score (stable relationships over time)"
+        },
+        "relationshipCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of relationships"
+        },
+        "verifiedRelationshipCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of verified relationships"
+        },
+        "lastCalculated": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When these metrics were last calculated"
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,67 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.intro.request",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Introduction request record. Used to request warm introductions through the relationship graph.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "requester",
+          "target",
+          "context",
+          "message",
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "requester": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of entity requesting introduction"
+          },
+          "target": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of entity to be introduced to"
+          },
+          "intermediary": {
+            "type": "string",
+            "format": "did",
+            "description": "Optional suggested intermediary DID"
+          },
+          "context": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Context for the introduction"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "Introduction request message"
+          },
+          "status": {
+            "type": "ref",
+            "ref": "net.rhiz.intro.defs#introStatus"
+          },
+          "pathRef": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference to the path record that suggested this intro"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
+

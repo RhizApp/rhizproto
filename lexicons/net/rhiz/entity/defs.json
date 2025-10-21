@@ -1,0 +1,60 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.entity.defs",
+  "defs": {
+    "entityType": {
+      "type": "string",
+      "description": "Type of entity in the Rhiz network",
+      "knownValues": ["person", "organization", "agent"]
+    },
+    "entityView": {
+      "type": "object",
+      "description": "Public view of an entity",
+      "required": ["did", "handle", "displayName", "verified", "createdAt"],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did",
+          "description": "Decentralized identifier"
+        },
+        "handle": {
+          "type": "string",
+          "format": "handle",
+          "description": "Human-readable handle"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Display name"
+        },
+        "entityType": {
+          "type": "ref",
+          "ref": "#entityType"
+        },
+        "bio": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Biography or description"
+        },
+        "avatarUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Avatar image URL"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Whether entity is verified"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    }
+  }
+}
+

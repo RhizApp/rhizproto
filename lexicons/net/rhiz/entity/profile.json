@@ -1,0 +1,52 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.entity.profile",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Entity profile record in Rhiz Protocol. Stores identity and metadata for people, organizations, and agents.",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "required": ["displayName", "entityType", "createdAt"],
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Display name for this entity"
+          },
+          "entityType": {
+            "type": "ref",
+            "ref": "net.rhiz.entity.defs#entityType",
+            "description": "Type of entity"
+          },
+          "bio": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Biography or description"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Avatar image URL"
+          },
+          "verified": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this entity is verified"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata",
+            "properties": {}
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,23 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.intro.defs",
+  "defs": {
+    "introStatus": {
+      "type": "string",
+      "description": "Status of an introduction request",
+      "knownValues": ["pending", "accepted", "declined", "completed", "cancelled"]
+    },
+    "agentIntent": {
+      "type": "string",
+      "description": "Intent of an agent message",
+      "knownValues": [
+        "intro_request",
+        "pitch",
+        "evaluation",
+        "negotiation",
+        "info"
+      ]
+    }
+  }
+}
+

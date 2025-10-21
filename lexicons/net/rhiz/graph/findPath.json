@@ -1,0 +1,74 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.graph.findPath",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Find the shortest path between two entities through the relationship graph. Uses trust-weighted pathfinding algorithms.",
+      "parameters": {
+        "type": "params",
+        "required": ["from", "to"],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "did",
+            "description": "Start entity DID"
+          },
+          "to": {
+            "type": "string",
+            "format": "did",
+            "description": "Target entity DID"
+          },
+          "maxHops": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 6,
+            "description": "Maximum number of hops to search"
+          },
+          "minStrength": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.5,
+            "description": "Minimum relationship strength to consider"
+          },
+          "relationshipTypes": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "net.rhiz.relationship.defs#relationshipType"
+            },
+            "description": "Optional filter by relationship types"
+          },
+          "excludeDids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "did"
+            },
+            "description": "Optional DIDs to exclude from path"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["paths"],
+          "properties": {
+            "paths": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "net.rhiz.graph.defs#graphPath"
+              },
+              "description": "List of paths found, sorted by strength"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

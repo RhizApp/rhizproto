@@ -1,0 +1,64 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.trust.metrics",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Trust metrics record for an entity. Calculated periodically and stored for historical analysis.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "trustScore",
+          "reputation",
+          "reciprocity",
+          "consistency",
+          "relationshipCount",
+          "verifiedRelationshipCount",
+          "calculatedAt"
+        ],
+        "properties": {
+          "trustScore": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Overall trust score (0.0-1.0)"
+          },
+          "reputation": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Reputation score"
+          },
+          "reciprocity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Reciprocity score"
+          },
+          "consistency": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Consistency score"
+          },
+          "relationshipCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total relationships"
+          },
+          "verifiedRelationshipCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Verified relationships"
+          },
+          "calculatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
+
