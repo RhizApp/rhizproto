@@ -702,9 +702,9 @@ Execute `RHIZ_ATTESTATION_IMPLEMENTATION_PLAN.md`:
 
 ---
 
-**Roadmap Version:** 1.0  
-**Date:** October 22, 2025  
-**Status:** Active Development  
+**Roadmap Version:** 1.0
+**Date:** October 22, 2025
+**Status:** Active Development
 **Focus:** Relationships First, AT Protocol Deep
 
 **We're building the relationship layer AT Protocol needs.**

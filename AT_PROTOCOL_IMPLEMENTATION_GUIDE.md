@@ -358,7 +358,7 @@ export class RhizRepoWriter {
   ): Promise<{ uri: string; cid: string }> {
     // Validate record structure
     validateRelationshipRecord(record)
-    
+
     // Create record in user's repo
     const result = await this.agent.com.atproto.repo.createRecord({
       repo,
@@ -368,7 +368,7 @@ export class RhizRepoWriter {
         ...record
       }
     })
-    
+
     return {
       uri: result.uri,
       cid: result.cid
@@ -460,17 +460,17 @@ export class RhizFirehoseIndexer {
       service: 'wss://bsky.network',
       handleEvent: (evt) => this.handleEvent(evt)
     })
-    
+
     await this.firehose.start()
   }
 
   async handleEvent(evt: CommitEvent) {
     // Filter for Rhiz collections only
     if (!evt.ops) return
-    
+
     for (const op of evt.ops) {
       if (op.action !== 'create' && op.action !== 'update') continue
-      
+
       // Route to appropriate handler
       switch (op.collection) {
         case 'net.rhiz.entity.profile':
@@ -573,7 +573,7 @@ export class RhizIdentityResolver {
       plcUrl: 'https://plc.directory',
       timeout: 3000
     })
-    
+
     this.cache = new LRUCache({
       max: 10000,
       ttl: 1000 * 60 * 60 // 1 hour
@@ -584,13 +584,13 @@ export class RhizIdentityResolver {
     // Check cache first
     const cached = this.cache.get(did)
     if (cached) return cached
-    
+
     // Resolve from PLC directory
     const didDoc = await this.resolver.resolve(did)
-    
+
     // Cache result
     this.cache.set(did, didDoc)
-    
+
     return didDoc
   }
 }
@@ -627,7 +627,7 @@ export class RhizIdentityResolver {
 def calculate_trust_score(entity_did: str) -> int:
     """
     Calculate trust score (0-100) for an entity.
-    
+
     Factors:
     - Relationship count (more = higher trust)
     - Mutual relationships (reciprocity)
@@ -635,28 +635,28 @@ def calculate_trust_score(entity_did: str) -> int:
     - Attestations received (social proof)
     - Account age (older = more trusted)
     """
-    
+
     # Get relationships
     relationships = get_relationships(entity_did)
-    
+
     # Base score from relationship count (0-40 points)
     rel_count_score = min(40, len(relationships) * 2)
-    
+
     # Reciprocity score (0-30 points)
     mutual = count_mutual_relationships(relationships)
     reciprocity_score = (mutual / len(relationships)) * 30 if relationships else 0
-    
+
     # Strength score (0-20 points)
     avg_strength = sum(r.strength for r in relationships) / len(relationships) if relationships else 0
     strength_score = (avg_strength / 100) * 20
-    
+
     # Attestation score (0-10 points)
     attestations = get_attestations_for_entity(entity_did)
     attestation_score = min(10, len(attestations))
-    
+
     # Total (0-100)
     total = rel_count_score + reciprocity_score + strength_score + attestation_score
-    
+
     return int(min(100, total))
 ```
 
@@ -716,11 +716,11 @@ async def find_path(
     db: Session = Depends(get_db)
 ):
     """Find trust-weighted paths between entities"""
-    
+
     # Validate inputs
     validate_did(request.from_did)
     validate_did(request.to_did)
-    
+
     # Find paths
     paths = await pathfinder.find_paths(
         from_did=request.from_did,
@@ -728,7 +728,7 @@ async def find_path(
         max_hops=request.max_hops or 6,
         min_strength=request.min_strength or 0
     )
-    
+
     return {
         "paths": paths,
         "count": len(paths)
@@ -823,28 +823,28 @@ test('full relationship creation flow', async () => {
     name: 'Alice',
     type: 'person'
   })
-  
+
   // 2. Create relationship
   const rel = await client.createRelationship({
     participants: ['did:plc:alice', 'did:plc:bob'],
     type: 'professional',
     strength: 85
   })
-  
+
   // 3. Verify indexed
   await waitForIndexing()
-  
+
   // 4. Query relationship
   const queried = await client.getRelationship(rel.uri)
   expect(queried.strength).toBe(85)
-  
+
   // 5. Create attestation
   const attestation = await client.attestRelationship({
     targetRelationship: rel.uri,
     attestationType: 'verify',
     confidence: 90
   })
-  
+
   // 6. Verify conviction updated
   await waitForIndexing()
   const conviction = await client.getConviction(rel.uri)
@@ -997,7 +997,7 @@ This serves as the reference implementation for Rhiz Protocol. Future implementa
 
 ---
 
-**Guide Version:** 1.0  
-**Date:** October 22, 2025  
+**Guide Version:** 1.0
+**Date:** October 22, 2025
 **Maintained by:** Rhiz Protocol Team
 

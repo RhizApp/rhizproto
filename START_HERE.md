@@ -28,7 +28,7 @@ This is the formal specification defining:
 - Trust algorithms
 - Protocol operations
 
-**Time:** 45 minutes  
+**Time:** 45 minutes
 **Outcome:** You understand what Rhiz Protocol defines
 
 ---
@@ -46,7 +46,7 @@ This documents our reference implementation on AT Protocol:
 - Performance optimizations
 - Lessons learned
 
-**Time:** 1 hour  
+**Time:** 1 hour
 **Outcome:** You know how to implement Rhiz on any tech stack
 
 ---
@@ -62,7 +62,7 @@ This explains the system architecture and gets you coding:
 - API endpoints
 - Common patterns
 
-**Time:** 30 minutes  
+**Time:** 30 minutes
 **Outcome:** You're building an application using Rhiz
 
 ---
@@ -77,7 +77,7 @@ This shows our 3-year plan:
 - Year 3: Maturity + Sustainability
 - Next 90 days (detailed)
 
-**Time:** 20 minutes  
+**Time:** 20 minutes
 **Outcome:** You know where we're going
 
 ---
@@ -487,9 +487,9 @@ Following Bluesky's model for maximum flexibility and patent protection.
 
 ---
 
-**Document:** START_HERE.md  
-**Version:** 1.0  
-**Date:** October 22, 2025  
+**Document:** START_HERE.md
+**Version:** 1.0
+**Date:** October 22, 2025
 **Maintained by:** Rhiz Protocol Team
 
 **We're building the relationship layer the internet never had.**

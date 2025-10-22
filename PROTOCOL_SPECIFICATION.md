@@ -313,20 +313,20 @@ For each attestation:
      - dispute: -1.5 (weighted higher for fraud prevention)
      - strengthen: +0.5
      - weaken: -0.5
-  
+
   2. Apply reputation multiplier (0.5x to 2.0x):
      multiplier = 0.5 + (attester_reputation / 100) * 1.5
-  
+
   3. Apply temporal decay (180-day half-life):
      decay = 0.5 ^ (days_old / 180)
-  
+
   4. Scale by confidence (0-100):
      weight = base_weight * reputation * decay * (confidence / 100)
 
 Aggregate:
   weighted_sum = sum of all weights
   total_weight = sum of absolute weights
-  
+
   conviction = 50 + (weighted_sum / total_weight) * 50
   conviction = clamp(conviction, 0, 100)
 ```
@@ -693,12 +693,12 @@ The result is the relationship layer the internet never had - machine-readable, 
 
 ---
 
-**Specification Version:** 1.0  
-**Date:** October 22, 2025  
-**Status:** Draft for Community Review  
+**Specification Version:** 1.0
+**Date:** October 22, 2025
+**Status:** Draft for Community Review
 **License:** MIT / Apache 2.0
 
-**Maintainers:** Rhiz Protocol Team  
-**Contact:** protocol@rhiz.network  
+**Maintainers:** Rhiz Protocol Team
+**Contact:** protocol@rhiz.network
 **Repository:** https://github.com/rhizprotocol/specification
 
