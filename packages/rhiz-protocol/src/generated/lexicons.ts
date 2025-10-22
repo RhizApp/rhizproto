@@ -10,6 +10,264 @@ import {
 import { type $Typed, is$typed, maybe$typed } from './util.js'
 
 export const schemaDict = {
+  NetRhizConvictionDefs: {
+    lexicon: 1,
+    id: 'net.rhiz.conviction.defs',
+    defs: {
+      convictionScore: {
+        type: 'object',
+        description:
+          'Network consensus score for a claim based on attestations',
+        required: ['score', 'attestationCount', 'lastUpdated'],
+        properties: {
+          score: {
+            type: 'integer',
+            minimum: 0,
+            maximum: 100,
+            description:
+              'Network confidence score (0-100). Higher = more network consensus.',
+          },
+          attestationCount: {
+            type: 'integer',
+            minimum: 0,
+            description: 'Total number of attestations received',
+          },
+          verifyCount: {
+            type: 'integer',
+            minimum: 0,
+            description: 'Number of verify attestations',
+          },
+          disputeCount: {
+            type: 'integer',
+            minimum: 0,
+            description: 'Number of dispute attestations',
+          },
+          lastUpdated: {
+            type: 'string',
+            format: 'datetime',
+            description: 'When conviction score was last recalculated',
+          },
+          trend: {
+            type: 'string',
+            enum: ['increasing', 'stable', 'decreasing'],
+            description: 'Conviction trend over last 30 days',
+          },
+          topAttesterReputation: {
+            type: 'integer',
+            minimum: 0,
+            maximum: 100,
+            description:
+              'Reputation score of highest-reputation attester (for quality signal)',
+          },
+        },
+      },
+      attestationSummary: {
+        type: 'object',
+        description: 'Summary of attestations for a target URI',
+        required: ['targetUri', 'conviction'],
+        properties: {
+          targetUri: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'URI of the attested record',
+          },
+          conviction: {
+            type: 'ref',
+            ref: 'lex:net.rhiz.conviction.defs#convictionScore',
+          },
+          recentAttestations: {
+            type: 'array',
+            description: 'Most recent attestations (limited to 10)',
+            maxLength: 10,
+            items: {
+              type: 'ref',
+              ref: 'lex:net.rhiz.conviction.defs#attestationRef',
+            },
+          },
+        },
+      },
+      attestationRef: {
+        type: 'object',
+        description: 'Reference to an attestation',
+        required: ['uri', 'attester', 'type', 'confidence', 'createdAt'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+            description: 'AT URI of the attestation record',
+          },
+          attester: {
+            type: 'string',
+            format: 'did',
+            description: 'DID of attester',
+          },
+          type: {
+            type: 'string',
+            enum: ['verify', 'dispute', 'strengthen', 'weaken'],
+          },
+          confidence: {
+            type: 'integer',
+            minimum: 0,
+            maximum: 100,
+          },
+          createdAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+    },
+  },
+  NetRhizConvictionGetScore: {
+    lexicon: 1,
+    id: 'net.rhiz.conviction.getScore',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get the conviction score for any attested record (relationship, trust metric, expertise claim, etc.)',
+        parameters: {
+          type: 'params',
+          required: ['uri'],
+          properties: {
+            uri: {
+              type: 'string',
+              format: 'at-uri',
+              description: 'AT URI of the record to get conviction for',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['uri', 'conviction'],
+            properties: {
+              uri: {
+                type: 'string',
+                format: 'at-uri',
+                description: 'URI of the attested record',
+              },
+              conviction: {
+                type: 'ref',
+                ref: 'lex:net.rhiz.conviction.defs#convictionScore',
+              },
+              attestations: {
+                type: 'array',
+                description: 'All attestations for this record',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:net.rhiz.conviction.defs#attestationRef',
+                },
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'RecordNotFound',
+            description:
+              'The specified URI does not exist or has no attestations',
+          },
+        ],
+      },
+    },
+  },
+  NetRhizConvictionListAttestations: {
+    lexicon: 1,
+    id: 'net.rhiz.conviction.listAttestations',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'List attestations for a specific record, with optional filtering',
+        parameters: {
+          type: 'params',
+          required: ['uri'],
+          properties: {
+            uri: {
+              type: 'string',
+              format: 'at-uri',
+              description: 'AT URI of the record to list attestations for',
+            },
+            type: {
+              type: 'string',
+              enum: ['verify', 'dispute', 'strengthen', 'weaken'],
+              description: 'Filter by attestation type',
+            },
+            minConfidence: {
+              type: 'integer',
+              minimum: 0,
+              maximum: 100,
+              description: 'Minimum confidence threshold (0-100)',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+              description: 'Number of attestations to return',
+            },
+            cursor: {
+              type: 'string',
+              description: 'Pagination cursor',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['attestations'],
+            properties: {
+              attestations: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:net.rhiz.conviction.listAttestations#attestationView',
+                },
+              },
+              cursor: {
+                type: 'string',
+                description: 'Pagination cursor for next page',
+              },
+            },
+          },
+        },
+      },
+      attestationView: {
+        type: 'object',
+        description: 'Full attestation with attester profile',
+        required: ['uri', 'record', 'attester'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          record: {
+            type: 'ref',
+            ref: 'lex:net.rhiz.relationship.attestation',
+          },
+          attester: {
+            type: 'ref',
+            ref: 'lex:net.rhiz.entity.defs#entityProfile',
+            description: 'Profile of the attester',
+          },
+          attesterReputation: {
+            type: 'integer',
+            minimum: 0,
+            maximum: 100,
+            description:
+              "Attester's reputation score (affects conviction weight)",
+          },
+        },
+      },
+    },
+  },
   NetRhizEntityDefs: {
     lexicon: 1,
     id: 'net.rhiz.entity.defs',
@@ -467,6 +725,120 @@ export const schemaDict = {
       },
     },
   },
+  NetRhizRelationshipAttestation: {
+    lexicon: 1,
+    id: 'net.rhiz.relationship.attestation',
+    defs: {
+      main: {
+        type: 'record',
+        description:
+          'Third-party attestation validating or disputing a relationship record. Enables network consensus on relationship authenticity and strength.',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: [
+            'targetRelationship',
+            'attester',
+            'attestationType',
+            'confidence',
+            'createdAt',
+          ],
+          properties: {
+            targetRelationship: {
+              type: 'string',
+              format: 'at-uri',
+              description:
+                'AT URI of the relationship being attested (e.g., at://did:plc:alice/net.rhiz.relationship.record/{tid})',
+            },
+            attester: {
+              type: 'string',
+              format: 'did',
+              description: 'DID of the entity making this attestation',
+            },
+            attestationType: {
+              type: 'string',
+              enum: ['verify', 'dispute', 'strengthen', 'weaken'],
+              description:
+                'Type of attestation: verify (confirms relationship), dispute (denies relationship), strengthen (suggests higher strength), weaken (suggests lower strength)',
+            },
+            confidence: {
+              type: 'integer',
+              minimum: 0,
+              maximum: 100,
+              description: "Attester's confidence in this attestation (0-100)",
+            },
+            evidence: {
+              type: 'string',
+              maxLength: 1000,
+              description:
+                'Optional textual evidence supporting this attestation',
+            },
+            suggestedStrength: {
+              type: 'integer',
+              minimum: 0,
+              maximum: 100,
+              description:
+                'For strengthen/weaken types: suggested relationship strength value',
+            },
+            targetFields: {
+              type: 'array',
+              description:
+                'Specific relationship fields being attested (if not attesting whole relationship)',
+              items: {
+                type: 'string',
+                enum: ['strength', 'type', 'context', 'verification'],
+              },
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+              description: 'Timestamp when attestation was created',
+            },
+            stake: {
+              type: 'ref',
+              ref: 'lex:net.rhiz.relationship.attestation#stakeInfo',
+              description:
+                'Optional economic stake on this attestation (Phase 3)',
+            },
+          },
+        },
+      },
+      stakeInfo: {
+        type: 'object',
+        description:
+          'Economic staking information for attestation (Phase 3 feature)',
+        required: ['amount', 'token'],
+        properties: {
+          amount: {
+            type: 'integer',
+            minimum: 0,
+            description: 'Amount of tokens staked',
+          },
+          token: {
+            type: 'string',
+            description: "Token symbol (e.g., 'RHIZ')",
+          },
+          lockedUntil: {
+            type: 'string',
+            format: 'datetime',
+            description: 'Timestamp when stake can be withdrawn',
+          },
+          slashingRisk: {
+            type: 'integer',
+            minimum: 0,
+            maximum: 100,
+            description:
+              'Percentage of stake at risk if attestation proven false (0-100)',
+          },
+          slashed: {
+            type: 'boolean',
+            default: false,
+            description: 'Whether this stake has been slashed',
+          },
+        },
+      },
+    },
+  },
   NetRhizRelationshipDefs: {
     lexicon: 1,
     id: 'net.rhiz.relationship.defs',
@@ -860,6 +1232,9 @@ export function validate(
 }
 
 export const ids = {
+  NetRhizConvictionDefs: 'net.rhiz.conviction.defs',
+  NetRhizConvictionGetScore: 'net.rhiz.conviction.getScore',
+  NetRhizConvictionListAttestations: 'net.rhiz.conviction.listAttestations',
   NetRhizEntityDefs: 'net.rhiz.entity.defs',
   NetRhizEntityProfile: 'net.rhiz.entity.profile',
   NetRhizGraphDefs: 'net.rhiz.graph.defs',
@@ -867,6 +1242,7 @@ export const ids = {
   NetRhizGraphGetNeighbors: 'net.rhiz.graph.getNeighbors',
   NetRhizIntroDefs: 'net.rhiz.intro.defs',
   NetRhizIntroRequest: 'net.rhiz.intro.request',
+  NetRhizRelationshipAttestation: 'net.rhiz.relationship.attestation',
   NetRhizRelationshipDefs: 'net.rhiz.relationship.defs',
   NetRhizRelationshipRecord: 'net.rhiz.relationship.record',
   NetRhizTrustDefs: 'net.rhiz.trust.defs',

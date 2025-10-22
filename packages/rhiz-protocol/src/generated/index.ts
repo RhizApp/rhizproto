@@ -9,6 +9,9 @@ import {
 import { schemas } from './lexicons.js'
 import { CID } from 'multiformats/cid'
 import { type OmitKey, type Un$Typed } from './util.js'
+import * as NetRhizConvictionDefs from './types/net/rhiz/conviction/defs.js'
+import * as NetRhizConvictionGetScore from './types/net/rhiz/conviction/getScore.js'
+import * as NetRhizConvictionListAttestations from './types/net/rhiz/conviction/listAttestations.js'
 import * as NetRhizEntityDefs from './types/net/rhiz/entity/defs.js'
 import * as NetRhizEntityProfile from './types/net/rhiz/entity/profile.js'
 import * as NetRhizGraphDefs from './types/net/rhiz/graph/defs.js'
@@ -16,11 +19,15 @@ import * as NetRhizGraphFindPath from './types/net/rhiz/graph/findPath.js'
 import * as NetRhizGraphGetNeighbors from './types/net/rhiz/graph/getNeighbors.js'
 import * as NetRhizIntroDefs from './types/net/rhiz/intro/defs.js'
 import * as NetRhizIntroRequest from './types/net/rhiz/intro/request.js'
+import * as NetRhizRelationshipAttestation from './types/net/rhiz/relationship/attestation.js'
 import * as NetRhizRelationshipDefs from './types/net/rhiz/relationship/defs.js'
 import * as NetRhizRelationshipRecord from './types/net/rhiz/relationship/record.js'
 import * as NetRhizTrustDefs from './types/net/rhiz/trust/defs.js'
 import * as NetRhizTrustMetrics from './types/net/rhiz/trust/metrics.js'
 
+export * as NetRhizConvictionDefs from './types/net/rhiz/conviction/defs.js'
+export * as NetRhizConvictionGetScore from './types/net/rhiz/conviction/getScore.js'
+export * as NetRhizConvictionListAttestations from './types/net/rhiz/conviction/listAttestations.js'
 export * as NetRhizEntityDefs from './types/net/rhiz/entity/defs.js'
 export * as NetRhizEntityProfile from './types/net/rhiz/entity/profile.js'
 export * as NetRhizGraphDefs from './types/net/rhiz/graph/defs.js'
@@ -28,6 +35,7 @@ export * as NetRhizGraphFindPath from './types/net/rhiz/graph/findPath.js'
 export * as NetRhizGraphGetNeighbors from './types/net/rhiz/graph/getNeighbors.js'
 export * as NetRhizIntroDefs from './types/net/rhiz/intro/defs.js'
 export * as NetRhizIntroRequest from './types/net/rhiz/intro/request.js'
+export * as NetRhizRelationshipAttestation from './types/net/rhiz/relationship/attestation.js'
 export * as NetRhizRelationshipDefs from './types/net/rhiz/relationship/defs.js'
 export * as NetRhizRelationshipRecord from './types/net/rhiz/relationship/record.js'
 export * as NetRhizTrustDefs from './types/net/rhiz/trust/defs.js'
@@ -59,6 +67,7 @@ export class NetNS {
 
 export class NetRhizNS {
   _client: XrpcClient
+  conviction: NetRhizConvictionNS
   entity: NetRhizEntityNS
   graph: NetRhizGraphNS
   intro: NetRhizIntroNS
@@ -67,11 +76,43 @@ export class NetRhizNS {
 
   constructor(client: XrpcClient) {
     this._client = client
+    this.conviction = new NetRhizConvictionNS(client)
     this.entity = new NetRhizEntityNS(client)
     this.graph = new NetRhizGraphNS(client)
     this.intro = new NetRhizIntroNS(client)
     this.relationship = new NetRhizRelationshipNS(client)
     this.trust = new NetRhizTrustNS(client)
+  }
+}
+
+export class NetRhizConvictionNS {
+  _client: XrpcClient
+
+  constructor(client: XrpcClient) {
+    this._client = client
+  }
+
+  getScore(
+    params?: NetRhizConvictionGetScore.QueryParams,
+    opts?: NetRhizConvictionGetScore.CallOptions,
+  ): Promise<NetRhizConvictionGetScore.Response> {
+    return this._client
+      .call('net.rhiz.conviction.getScore', params, undefined, opts)
+      .catch((e) => {
+        throw NetRhizConvictionGetScore.toKnownErr(e)
+      })
+  }
+
+  listAttestations(
+    params?: NetRhizConvictionListAttestations.QueryParams,
+    opts?: NetRhizConvictionListAttestations.CallOptions,
+  ): Promise<NetRhizConvictionListAttestations.Response> {
+    return this._client.call(
+      'net.rhiz.conviction.listAttestations',
+      params,
+      undefined,
+      opts,
+    )
   }
 }
 
@@ -287,11 +328,96 @@ export class NetRhizIntroRequestRecord {
 
 export class NetRhizRelationshipNS {
   _client: XrpcClient
+  attestation: NetRhizRelationshipAttestationRecord
   record: NetRhizRelationshipRecordRecord
 
   constructor(client: XrpcClient) {
     this._client = client
+    this.attestation = new NetRhizRelationshipAttestationRecord(client)
     this.record = new NetRhizRelationshipRecordRecord(client)
+  }
+}
+
+export class NetRhizRelationshipAttestationRecord {
+  _client: XrpcClient
+
+  constructor(client: XrpcClient) {
+    this._client = client
+  }
+
+  async list(
+    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
+  ): Promise<{
+    cursor?: string
+    records: { uri: string; value: NetRhizRelationshipAttestation.Record }[]
+  }> {
+    const res = await this._client.call('com.atproto.repo.listRecords', {
+      collection: 'net.rhiz.relationship.attestation',
+      ...params,
+    })
+    return res.data
+  }
+
+  async get(
+    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
+  ): Promise<{
+    uri: string
+    cid: string
+    value: NetRhizRelationshipAttestation.Record
+  }> {
+    const res = await this._client.call('com.atproto.repo.getRecord', {
+      collection: 'net.rhiz.relationship.attestation',
+      ...params,
+    })
+    return res.data
+  }
+
+  async create(
+    params: OmitKey<
+      ComAtprotoRepoCreateRecord.InputSchema,
+      'collection' | 'record'
+    >,
+    record: Un$Typed<NetRhizRelationshipAttestation.Record>,
+    headers?: Record<string, string>,
+  ): Promise<{ uri: string; cid: string }> {
+    const collection = 'net.rhiz.relationship.attestation'
+    const res = await this._client.call(
+      'com.atproto.repo.createRecord',
+      undefined,
+      { collection, ...params, record: { ...record, $type: collection } },
+      { encoding: 'application/json', headers },
+    )
+    return res.data
+  }
+
+  async put(
+    params: OmitKey<
+      ComAtprotoRepoPutRecord.InputSchema,
+      'collection' | 'record'
+    >,
+    record: Un$Typed<NetRhizRelationshipAttestation.Record>,
+    headers?: Record<string, string>,
+  ): Promise<{ uri: string; cid: string }> {
+    const collection = 'net.rhiz.relationship.attestation'
+    const res = await this._client.call(
+      'com.atproto.repo.putRecord',
+      undefined,
+      { collection, ...params, record: { ...record, $type: collection } },
+      { encoding: 'application/json', headers },
+    )
+    return res.data
+  }
+
+  async delete(
+    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
+    headers?: Record<string, string>,
+  ): Promise<void> {
+    await this._client.call(
+      'com.atproto.repo.deleteRecord',
+      undefined,
+      { collection: 'net.rhiz.relationship.attestation', ...params },
+      { headers },
+    )
   }
 }
 

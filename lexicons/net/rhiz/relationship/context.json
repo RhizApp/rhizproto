@@ -1,0 +1,198 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.relationship.context",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Semantic context record for relationship intelligence. Provides domain-specific categorization and vector embeddings for semantic search and matching.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "relationshipUri",
+          "domain",
+          "expertise",
+          "collaborationType",
+          "semanticTags",
+          "createdAt"
+        ],
+        "properties": {
+          "relationshipUri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference to the base relationship record"
+          },
+          "domain": {
+            "type": "ref",
+            "ref": "#domainCategory",
+            "description": "Primary domain category"
+          },
+          "expertise": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxLength": 20,
+            "description": "Specific expertise areas or skills involved"
+          },
+          "collaborationType": {
+            "type": "ref",
+            "ref": "#collaborationType",
+            "description": "Type of collaboration or interaction"
+          },
+          "semanticTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxLength": 30,
+            "description": "Semantic tags for enhanced discoverability"
+          },
+          "embedding": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minLength": 384,
+            "maxLength": 384,
+            "description": "384-dimensional vector embedding for semantic similarity (e.g., sentence-transformers)"
+          },
+          "projectNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxLength": 10,
+            "description": "Names of specific projects or initiatives"
+          },
+          "outcomes": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "#outcome"
+            },
+            "maxLength": 5,
+            "description": "Measurable outcomes from the relationship"
+          },
+          "geographicScope": {
+            "type": "ref",
+            "ref": "#geographicScope",
+            "description": "Geographic scope of the relationship"
+          },
+          "confidenceScore": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Confidence in the context accuracy (0-100)"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    },
+    "domainCategory": {
+      "type": "string",
+      "knownValues": [
+        "technology",
+        "finance",
+        "healthcare",
+        "education",
+        "entertainment",
+        "retail",
+        "manufacturing",
+        "consulting",
+        "legal",
+        "marketing",
+        "design",
+        "research",
+        "government",
+        "nonprofit",
+        "sports",
+        "food",
+        "travel",
+        "real-estate",
+        "energy",
+        "transportation",
+        "agriculture",
+        "media",
+        "art",
+        "music",
+        "other"
+      ]
+    },
+    "collaborationType": {
+      "type": "string",
+      "knownValues": [
+        "co-founding",
+        "employment",
+        "consulting",
+        "advisory",
+        "investment",
+        "partnership",
+        "client-service",
+        "mentorship",
+        "collaboration",
+        "competition",
+        "education",
+        "research",
+        "volunteer",
+        "social",
+        "family",
+        "other"
+      ]
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["type", "description"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "knownValues": [
+            "product-launch",
+            "funding-raised",
+            "acquisition",
+            "ipo",
+            "revenue-milestone",
+            "user-milestone",
+            "award",
+            "publication",
+            "patent",
+            "certification",
+            "successful-project",
+            "failed-project",
+            "other"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "value": {
+          "type": "string",
+          "description": "Quantified value (e.g., '$5M raised', '1M users', etc.)"
+        },
+        "date": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "geographicScope": {
+      "type": "string",
+      "knownValues": [
+        "local",
+        "regional",
+        "national",
+        "international",
+        "global",
+        "remote"
+      ]
+    }
+  }
+}

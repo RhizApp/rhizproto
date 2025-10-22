@@ -1,0 +1,106 @@
+{
+  "lexicon": 1,
+  "id": "net.rhiz.relationship.attestation",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Third-party attestation validating or disputing a relationship record. Enables network consensus on relationship authenticity and strength.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "targetRelationship",
+          "attester",
+          "attestationType",
+          "confidence",
+          "createdAt"
+        ],
+        "properties": {
+          "targetRelationship": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT URI of the relationship being attested (e.g., at://did:plc:alice/net.rhiz.relationship.record/{tid})"
+          },
+          "attester": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the entity making this attestation"
+          },
+          "attestationType": {
+            "type": "string",
+            "enum": ["verify", "dispute", "strengthen", "weaken"],
+            "description": "Type of attestation: verify (confirms relationship), dispute (denies relationship), strengthen (suggests higher strength), weaken (suggests lower strength)"
+          },
+          "confidence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Attester's confidence in this attestation (0-100)"
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Optional textual evidence supporting this attestation"
+          },
+          "suggestedStrength": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "For strengthen/weaken types: suggested relationship strength value"
+          },
+          "targetFields": {
+            "type": "array",
+            "description": "Specific relationship fields being attested (if not attesting whole relationship)",
+            "items": {
+              "type": "string",
+              "enum": ["strength", "type", "context", "verification"]
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Timestamp when attestation was created"
+          },
+          "stake": {
+            "type": "ref",
+            "ref": "#stakeInfo",
+            "description": "Optional economic stake on this attestation (Phase 3)"
+          }
+        }
+      }
+    },
+    "stakeInfo": {
+      "type": "object",
+      "description": "Economic staking information for attestation (Phase 3 feature)",
+      "required": ["amount", "token"],
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Amount of tokens staked"
+        },
+        "token": {
+          "type": "string",
+          "description": "Token symbol (e.g., 'RHIZ')"
+        },
+        "lockedUntil": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp when stake can be withdrawn"
+        },
+        "slashingRisk": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of stake at risk if attestation proven false (0-100)"
+        },
+        "slashed": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this stake has been slashed"
+        }
+      }
+    }
+  }
+}
+

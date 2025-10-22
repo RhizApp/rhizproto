@@ -41,38 +41,45 @@
     },
     "verification": {
       "type": "object",
-      "description": "Verification data for a relationship",
-      "required": ["consensusScore", "verifierCount", "confidence", "lastVerified"],
+      "description": "Network verification and consensus data for a relationship",
+      "required": ["consensusScore", "attestationCount", "lastUpdated"],
       "properties": {
         "consensusScore": {
           "type": "integer",
           "minimum": 0,
           "maximum": 100,
-          "description": "Consensus score from verifiers (0-100, scaled from 0.0-1.0)"
+          "description": "Network consensus score based on attestations (0-100)"
         },
-        "verifierCount": {
+        "attestationCount": {
           "type": "integer",
           "minimum": 0,
-          "description": "Number of entities that verified this relationship"
+          "description": "Total number of attestations received"
         },
-        "confidence": {
+        "verifyCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of verify attestations"
+        },
+        "disputeCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of dispute attestations"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When verification was last updated"
+        },
+        "trend": {
+          "type": "string",
+          "enum": ["increasing", "stable", "decreasing"],
+          "description": "Consensus trend over last 30 days"
+        },
+        "topAttesterReputation": {
           "type": "integer",
           "minimum": 0,
           "maximum": 100,
-          "description": "Confidence level in verification (0-100, scaled from 0.0-1.0)"
-        },
-        "lastVerified": {
-          "type": "string",
-          "format": "datetime",
-          "description": "When relationship was last verified"
-        },
-        "verifiers": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "did"
-          },
-          "description": "DIDs of entities that verified this relationship"
+          "description": "Highest reputation among attesters (quality signal)"
         }
       }
     },
