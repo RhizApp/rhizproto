@@ -82,6 +82,7 @@ app.include_router(graph.router, prefix="/api/v1/graph", tags=["graph"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytics"])
 app.include_router(entities.router, prefix="/api/v1/entities", tags=["entities"])
 app.include_router(conviction.router, tags=["conviction"])  # XRPC endpoints include prefix
+app.include_router(conviction.internal_router, tags=["attestations"])  # Internal indexer endpoints
 
 
 @app.exception_handler(404)

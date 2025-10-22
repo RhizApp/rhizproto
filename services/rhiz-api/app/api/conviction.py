@@ -1,6 +1,7 @@
 """Conviction API endpoints
 
 Provides XRPC endpoints for querying conviction scores and attestations.
+Also provides internal endpoints for firehose indexer to store attestations.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -8,11 +9,27 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import Optional
 from datetime import datetime
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.services.conviction import ConvictionCalculator, Attestation as ConvictionAttestation
 
 router = APIRouter(prefix="/xrpc/net.rhiz.conviction", tags=["conviction"])
+internal_router = APIRouter(prefix="/api/v1/attestations", tags=["attestations-internal"])
+
+
+class AttestationCreate(BaseModel):
+    """Schema for creating attestation from indexer"""
+    uri: str
+    cid: str
+    attester_did: str
+    target_uri: str
+    attestation_type: str
+    confidence: int
+    evidence: Optional[str] = None
+    suggested_strength: Optional[int] = None
+    created_at: str
+    indexed_at: str
 
 
 @router.get("/getScore")
@@ -229,4 +246,132 @@ async def list_attestations(
         "attestations": result,
         "cursor": next_cursor
     }
+
+
+@internal_router.post("")
+async def create_attestation(
+    attestation: AttestationCreate,
+    db: Session = Depends(get_db)
+):
+    """
+    Internal endpoint for firehose indexer to store attestations.
+    Also triggers conviction recalculation for the target.
+    """
+    # Insert attestation
+    insert_query = text("""
+        INSERT INTO attestations (
+            uri, cid, attester_did, target_uri, attestation_type,
+            confidence, evidence, suggested_strength, created_at, indexed_at
+        ) VALUES (
+            :uri, :cid, :attester_did, :target_uri, :attestation_type,
+            :confidence, :evidence, :suggested_strength, :created_at, :indexed_at
+        )
+        ON CONFLICT (uri) DO UPDATE SET
+            attestation_type = EXCLUDED.attestation_type,
+            confidence = EXCLUDED.confidence,
+            evidence = EXCLUDED.evidence,
+            indexed_at = EXCLUDED.indexed_at
+    """)
+    
+    db.execute(insert_query, {
+        "uri": attestation.uri,
+        "cid": attestation.cid,
+        "attester_did": attestation.attester_did,
+        "target_uri": attestation.target_uri,
+        "attestation_type": attestation.attestation_type,
+        "confidence": attestation.confidence,
+        "evidence": attestation.evidence,
+        "suggested_strength": attestation.suggested_strength,
+        "created_at": attestation.created_at,
+        "indexed_at": attestation.indexed_at,
+    })
+    db.commit()
+    
+    # Recalculate conviction for target
+    try:
+        # Get all attestations for target
+        attestations_query = text("""
+            SELECT uri, attester_did, attestation_type, confidence, created_at
+            FROM attestations 
+            WHERE target_uri = :target_uri
+        """)
+        attestation_rows = db.execute(
+            attestations_query, 
+            {"target_uri": attestation.target_uri}
+        ).fetchall()
+        
+        # Calculate conviction
+        attestations_list = [
+            ConvictionAttestation(
+                uri=row.uri,
+                attester_did=row.attester_did,
+                attestation_type=row.attestation_type,
+                confidence=row.confidence,
+                created_at=row.created_at
+            )
+            for row in attestation_rows
+        ]
+        
+        calc = ConvictionCalculator()
+        conviction = calc.calculate_conviction(attestation.target_uri, attestations_list, db)
+        
+        # Update conviction_scores cache
+        cache_query = text("""
+            INSERT INTO conviction_scores (
+                target_uri, score, attestation_count,
+                verify_count, dispute_count, strengthen_count, weaken_count,
+                last_updated, trend, top_attester_reputation
+            ) VALUES (
+                :target_uri, :score, :attestation_count,
+                :verify_count, :dispute_count, :strengthen_count, :weaken_count,
+                :last_updated, :trend, :top_attester_reputation
+            )
+            ON CONFLICT (target_uri) DO UPDATE SET
+                score = EXCLUDED.score,
+                attestation_count = EXCLUDED.attestation_count,
+                verify_count = EXCLUDED.verify_count,
+                dispute_count = EXCLUDED.dispute_count,
+                strengthen_count = EXCLUDED.strengthen_count,
+                weaken_count = EXCLUDED.weaken_count,
+                last_updated = EXCLUDED.last_updated,
+                trend = EXCLUDED.trend,
+                top_attester_reputation = EXCLUDED.top_attester_reputation
+        """)
+        
+        db.execute(cache_query, {
+            "target_uri": attestation.target_uri,
+            "score": conviction['score'],
+            "attestation_count": conviction['attestation_count'],
+            "verify_count": conviction['verify_count'],
+            "dispute_count": conviction['dispute_count'],
+            "strengthen_count": conviction['strengthen_count'],
+            "weaken_count": conviction['weaken_count'],
+            "last_updated": datetime.utcnow(),
+            "trend": conviction['trend'],
+            "top_attester_reputation": conviction['top_attester_reputation']
+        })
+        
+        # Update relationships table if target is a relationship
+        if 'net.rhiz.relationship.record' in attestation.target_uri:
+            relationship_query = text("""
+                UPDATE relationships
+                SET conviction_score = :score, attestation_count = :count
+                WHERE uri = :uri
+            """)
+            db.execute(relationship_query, {
+                "score": conviction['score'],
+                "count": conviction['attestation_count'],
+                "uri": attestation.target_uri
+            })
+        
+        db.commit()
+        
+        return {
+            "status": "success",
+            "attestation_uri": attestation.uri,
+            "conviction": conviction
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to recalculate conviction: {str(e)}")
 

@@ -11,6 +11,7 @@ import {
   RelationshipIndexer,
   IndexerCallbacks,
   IndexedRelationship,
+  IndexedAttestation,
 } from '../indexer/relationship_indexer';
 
 interface FirehoseEvent {
@@ -51,6 +52,9 @@ class FirehoseIngestor {
       onRelationshipCreated: this.handleRhizRelationshipCreated.bind(this),
       onRelationshipUpdated: this.handleRhizRelationshipUpdated.bind(this),
       onRelationshipDeleted: this.handleRhizRelationshipDeleted.bind(this),
+      onAttestationCreated: this.handleRhizAttestationCreated.bind(this),
+      onAttestationUpdated: this.handleRhizAttestationUpdated.bind(this),
+      onAttestationDeleted: this.handleRhizAttestationDeleted.bind(this),
       onProfileCreated: this.handleRhizProfileCreated.bind(this),
       onError: (error) => {
         console.error('❌ Rhiz indexer error:', error);
@@ -165,6 +169,71 @@ class FirehoseIngestor {
 
     // TODO: Remove from PostgreSQL
     // TODO: Recalculate trust metrics
+  }
+
+  /**
+   * Handle native Rhiz attestation creation
+   */
+  private async handleRhizAttestationCreated(
+    attestation: IndexedAttestation,
+  ): Promise<void> {
+    console.log(`✅ Rhiz Attestation Created: ${attestation.uri}`);
+    console.log(`   Attester: ${attestation.attesterDid}`);
+    console.log(`   Target: ${attestation.targetRelationship}`);
+    console.log(`   Type: ${attestation.attestationType} (${attestation.confidence}% confidence)`);
+
+    try {
+      // Store attestation in PostgreSQL
+      const apiUrl = config.api.baseUrl || 'http://localhost:8000';
+      
+      // Call the API to store attestation (which will also recalculate conviction)
+      const response = await fetch(`${apiUrl}/api/v1/attestations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uri: attestation.uri,
+          cid: attestation.cid,
+          attester_did: attestation.attesterDid,
+          target_uri: attestation.targetRelationship,
+          attestation_type: attestation.attestationType,
+          confidence: attestation.confidence,
+          evidence: attestation.evidence,
+          suggested_strength: attestation.suggestedStrength,
+          created_at: attestation.createdAt,
+          indexed_at: attestation.indexedAt,
+        }),
+      });
+
+      if (response.ok) {
+        console.log(`   ✓ Attestation stored and conviction recalculated`);
+      } else {
+        console.error(`   ✗ Failed to store attestation: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error(`   ✗ Error storing attestation:`, error);
+    }
+  }
+
+  /**
+   * Handle native Rhiz attestation update
+   */
+  private async handleRhizAttestationUpdated(
+    attestation: IndexedAttestation,
+  ): Promise<void> {
+    console.log(`🔄 Rhiz Attestation Updated: ${attestation.uri}`);
+    
+    // TODO: Update attestation in PostgreSQL
+    // TODO: Recalculate conviction for target relationship
+  }
+
+  /**
+   * Handle native Rhiz attestation deletion
+   */
+  private async handleRhizAttestationDeleted(uri: string): Promise<void> {
+    console.log(`🗑️  Rhiz Attestation Deleted: ${uri}`);
+    
+    // TODO: Remove from PostgreSQL
+    // TODO: Recalculate conviction for target relationship
   }
 
   /**
