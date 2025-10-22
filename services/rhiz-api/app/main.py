@@ -14,7 +14,7 @@ from app.config import settings
 from app.database import init_db
 
 # Import routers
-from app.api import analytics, entities, graph
+from app.api import analytics, conviction, entities, graph
 
 
 @asynccontextmanager
@@ -81,6 +81,7 @@ async def readiness_check() -> dict[str, str]:
 app.include_router(graph.router, prefix="/api/v1/graph", tags=["graph"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytics"])
 app.include_router(entities.router, prefix="/api/v1/entities", tags=["entities"])
+app.include_router(conviction.router, tags=["conviction"])  # XRPC endpoints include prefix
 
 
 @app.exception_handler(404)
