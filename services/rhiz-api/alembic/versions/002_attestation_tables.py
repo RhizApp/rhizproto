@@ -32,13 +32,13 @@ def upgrade():
         sa.Column('cid', sa.Text(), nullable=False),
         sa.ForeignKeyConstraint(['attester_did'], ['entities.did'], ondelete='CASCADE'),
     )
-    
+
     # Indexes for fast queries
     op.create_index('idx_attestations_target', 'attestations', ['target_uri'])
     op.create_index('idx_attestations_attester', 'attestations', ['attester_did'])
     op.create_index('idx_attestations_type', 'attestations', ['attestation_type'])
     op.create_index('idx_attestations_created', 'attestations', ['created_at'])
-    
+
     # Conviction scores cache table
     op.create_table(
         'conviction_scores',
@@ -53,14 +53,14 @@ def upgrade():
         sa.Column('trend', sa.Text(), nullable=True),
         sa.Column('top_attester_reputation', sa.Integer(), nullable=True),
     )
-    
+
     op.create_index('idx_conviction_score', 'conviction_scores', ['score'])
     op.create_index('idx_conviction_updated', 'conviction_scores', ['last_updated'])
-    
+
     # Add conviction columns to relationships table
     op.add_column('relationships', sa.Column('conviction_score', sa.Integer(), nullable=True))
     op.add_column('relationships', sa.Column('attestation_count', sa.Integer(), server_default='0'))
-    
+
     op.create_index('idx_relationships_conviction', 'relationships', ['conviction_score'])
 
 
@@ -68,11 +68,11 @@ def downgrade():
     op.drop_index('idx_relationships_conviction')
     op.drop_column('relationships', 'attestation_count')
     op.drop_column('relationships', 'conviction_score')
-    
+
     op.drop_index('idx_conviction_updated')
     op.drop_index('idx_conviction_score')
     op.drop_table('conviction_scores')
-    
+
     op.drop_index('idx_attestations_created')
     op.drop_index('idx_attestations_type')
     op.drop_index('idx_attestations_attester')
