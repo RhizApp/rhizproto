@@ -1,30 +1,44 @@
 # Rhiz Protocol - The Relationship Layer of the Web
 
-**AT Protocol Native | Federation-Ready | User-Owned Data**
+**The Relationship Protocol for the Internet**
 
-Welcome! This repository contains the **Rhiz Protocol** - the first truly AT Protocol-native relationship intelligence system, built on Bluesky's AT Protocol infrastructure.
+**Protocol Standard | AT Protocol Native | User-Owned Data**
 
-> **What is Rhiz?** A decentralized protocol for machine-readable trust, quantified relationships, and warm introductions. Built natively on AT Protocol from the ground up.
+Rhiz Protocol is a decentralized protocol for creating, verifying, and querying machine-readable relationships. Relationships are first-class data structures with quantified trust, temporal dynamics, and network verification.
+
+> **What is Rhiz?** A protocol specification for verifiable relationships and trust, with a production-ready implementation on AT Protocol. Think OAuth for relationships, not just another social network.
 
 ## 🎯 What is Rhiz Protocol?
 
-Rhiz Protocol makes **relationships machine-readable, verifiable, and portable**. It's the missing infrastructure layer for trust-weighted social graphs, warm introductions, and multi-agent coordination.
+Rhiz Protocol defines standard primitives for relationships, attestations, and trust - enabling any application to build on verifiable relationship data.
 
-### Key Features
+### Core Primitives
 
-- ✅ **Trust-Weighted Graphs** - Find paths between entities weighted by verified relationship strength
-- ✅ **Warm Introductions** - AI agents facilitate intros through optimal intermediaries
-- ✅ **Quantified Trust** - Transparent, verifiable trust scores (0-100 scale)
-- ✅ **DID-Native Identity** - AT Protocol DIDs as primary identifiers
-- ✅ **Content-Addressed** - All relationships stored as `at://` URIs with CIDs
-- ✅ **Federation-Ready** - User-owned data, multiple AppViews can index
-- ✅ **Cryptographically Signed** - All relationships require participant signatures
+1. **Entity** - Any person, organization, or agent (identified by DID)
+2. **Relationship** - Quantified connection between entities (strength 0-100)
+3. **Attestation** - Third-party validation of relationships
+4. **Trust Metrics** - Calculated scores based on network consensus
+
+### Key Innovations
+
+- ✅ **Relationships as First-Class Data** - Not just graph edges, but rich data structures
+- ✅ **Network Verification** - Attestations create conviction scores (0-100)
+- ✅ **Trust Quantification** - Transparent algorithms, reproducible results
+- ✅ **Cryptographic Verification** - All relationships require signatures from participants
+- ✅ **User Ownership** - Data lives in user repositories, not centralized databases
+- ✅ **Federation-Ready** - Multiple services can index the same relationship data
 
 ---
 
-## 📦 What's in This Repository?
+## 📦 Repository Contents
 
-### Rhiz Protocol Packages
+### Protocol Specification
+
+- **[Protocol Specification](PROTOCOL_SPECIFICATION.md)** - Complete formal specification (chain-agnostic)
+- **[AT Protocol Implementation Guide](AT_PROTOCOL_IMPLEMENTATION_GUIDE.md)** - Reference implementation on AT Protocol
+- **[Protocol Roadmap](RHIZ_PROTOCOL_ROADMAP.md)** - 3-year development plan
+
+### AT Protocol Implementation (Reference)
 
 | Package | Description | Status |
 |---------|-------------|--------|
@@ -198,12 +212,19 @@ Rhiz Protocol is built on the Authenticated Transfer Protocol ("ATP" or "atproto
 
 ## 📖 Documentation
 
-- **[Project Overview](PROJECT_OVERVIEW.md)** - Comprehensive protocol description (start here!)
-- **[AT Protocol Native Migration](AT_PROTOCOL_NATIVE_MIGRATION.md)** - Architecture guide
-- **[Implementation Summary](IMPLEMENTATION_SUMMARY.md)** - Technical details
-- **[Refactor Status](REFACTOR_STATUS.md)** - Completion checklist
-- **[Lexicon Schemas](lexicons/net/rhiz/)** - Protocol specifications
-- **[Interop Tests](interop-test-files/rhiz/)** - Reference implementation data
+### Start Here
+- **[Protocol Specification](PROTOCOL_SPECIFICATION.md)** ⭐ - Complete formal spec
+- **[Protocol Roadmap](RHIZ_PROTOCOL_ROADMAP.md)** - Development timeline
+- **[AT Protocol Implementation Guide](AT_PROTOCOL_IMPLEMENTATION_GUIDE.md)** - Reference implementation
+
+### Implementation Details
+- **[Project Overview](PROJECT_OVERVIEW.md)** - System architecture
+- **[Lexicon Schemas](lexicons/net/rhiz/)** - AT Protocol schema definitions
+- **[Interop Tests](interop-test-files/rhiz/)** - Test data and validation
+
+### Historical Context
+- **[AT Protocol Native Migration](AT_PROTOCOL_NATIVE_MIGRATION.md)** - Architecture decisions
+- **[Refactor Status](REFACTOR_STATUS.md)** - Foundation completion
 
 ## 🤝 Contributing
 
