@@ -185,7 +185,7 @@ class FirehoseIngestor {
     try {
       // Store attestation in PostgreSQL
       const apiUrl = config.api.baseUrl || 'http://localhost:8000';
-      
+
       // Call the API to store attestation (which will also recalculate conviction)
       const response = await fetch(`${apiUrl}/api/v1/attestations`, {
         method: 'POST',
@@ -221,7 +221,7 @@ class FirehoseIngestor {
     attestation: IndexedAttestation,
   ): Promise<void> {
     console.log(`🔄 Rhiz Attestation Updated: ${attestation.uri}`);
-    
+
     // TODO: Update attestation in PostgreSQL
     // TODO: Recalculate conviction for target relationship
   }
@@ -231,7 +231,7 @@ class FirehoseIngestor {
    */
   private async handleRhizAttestationDeleted(uri: string): Promise<void> {
     console.log(`🗑️  Rhiz Attestation Deleted: ${uri}`);
-    
+
     // TODO: Remove from PostgreSQL
     // TODO: Recalculate conviction for target relationship
   }
