@@ -23,4 +23,11 @@ export type {
 // Export API-specific types
 export type { CreateEntityRequest, UpdateEntityRequest } from './api/entities';
 export type { TrustHealthResponse, NetworkStatsResponse } from './api/analytics';
+export type { 
+  ConvictionScore, 
+  Attestation, 
+  AttestationParams,
+  ListAttestationsParams,
+  ListAttestationsResponse 
+} from './api/conviction';
 

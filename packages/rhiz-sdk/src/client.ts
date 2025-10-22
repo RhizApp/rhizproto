@@ -7,6 +7,7 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import { GraphAPI } from './api/graph';
 import { EntitiesAPI } from './api/entities';
 import { AnalyticsAPI } from './api/analytics';
+import { ConvictionAPI } from './api/conviction';
 import { AtpAgent } from '@atproto/api';
 import { RhizRepoWriter } from '@atproto/rhiz-protocol';
 
@@ -42,6 +43,7 @@ export class RhizClient {
   public graph: GraphAPI;
   public entities: EntitiesAPI;
   public analytics: AnalyticsAPI;
+  public conviction: ConvictionAPI;
 
   constructor(config: RhizClientConfig) {
     // Create axios instance
@@ -79,6 +81,7 @@ export class RhizClient {
     this.graph = new GraphAPI(this.client);
     this.entities = new EntitiesAPI(this.client, this.repoWriter);
     this.analytics = new AnalyticsAPI(this.client);
+    this.conviction = new ConvictionAPI(this.client, this.repoWriter);
   }
 
   /**
