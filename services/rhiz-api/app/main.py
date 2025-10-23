@@ -14,7 +14,7 @@ from app.config import settings
 from app.database import init_db
 
 # Import routers
-from app.api import analytics, conviction, entities, graph
+from app.api import agents, analytics, conviction, entities, graph
 
 
 @asynccontextmanager
@@ -78,6 +78,7 @@ async def readiness_check() -> dict[str, str]:
 
 
 # Include API routers
+app.include_router(agents.router, tags=["agents"])  # AI-powered protocol features
 app.include_router(graph.router, prefix="/api/v1/graph", tags=["graph"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytics"])
 app.include_router(entities.router, prefix="/api/v1/entities", tags=["entities"])

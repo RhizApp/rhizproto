@@ -24,6 +24,7 @@ httpx = "^0.26.0"
 tenacity = "^8.2.3"
 numpy = "^1.26.3"
 openai = "^1.7.2"
+baml-py = "^0.211.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.4"
