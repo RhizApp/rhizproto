@@ -33,9 +33,9 @@ class TestRelationshipExtractionAPI:
         mock_result.total_found = 1
         mock_result.extraction_quality = 85
         mock_result.ambiguous_cases = []
-        
+
         mock_agent_service.extract_relationships_from_text = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/relationships/extract",
@@ -44,7 +44,7 @@ class TestRelationshipExtractionAPI:
                 "context_hint": None
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -59,9 +59,9 @@ class TestRelationshipExtractionAPI:
         mock_result.total_found = 0
         mock_result.extraction_quality = 70
         mock_result.ambiguous_cases = []
-        
+
         mock_agent_service.extract_relationships_from_text = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/relationships/extract",
@@ -70,7 +70,7 @@ class TestRelationshipExtractionAPI:
                 "context_hint": "Tech startup founders"
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
 
@@ -85,9 +85,9 @@ class TestRelationshipExtractionAPI:
         mock_result.suggested_improvements = []
         mock_result.quality_score = 90
         mock_result.attestation_potential = 85
-        
+
         mock_agent_service.assess_relationship_quality = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/relationships/assess-quality",
@@ -96,7 +96,7 @@ class TestRelationshipExtractionAPI:
                 "claimed_strength": 85
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -119,9 +119,9 @@ class TestTrustExplanationAPI:
         mock_result.comparison_to_network = "Above average"
         mock_result.trend = "stable"
         mock_result.recommendation = "Highly trustworthy"
-        
+
         mock_agent_service.explain_trust_score = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/trust/explain",
@@ -131,7 +131,7 @@ class TestTrustExplanationAPI:
                 "network_context": {"average": 75}
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -150,9 +150,9 @@ class TestTrustExplanationAPI:
         mock_result.negative_signals = []
         mock_result.recommendation = "Trust this relationship"
         mock_result.verification_status = "strong"
-        
+
         mock_agent_service.explain_conviction_score = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/trust/explain-conviction",
@@ -162,7 +162,7 @@ class TestTrustExplanationAPI:
                 "attestations": []
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -182,9 +182,9 @@ class TestTrustExplanationAPI:
         mock_result.risk_factors = []
         mock_result.success_probability = 75
         mock_result.strategy_recommendation = "Proceed with intro"
-        
+
         mock_agent_service.explain_path_choice = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/trust/explain-path",
@@ -196,7 +196,7 @@ class TestTrustExplanationAPI:
                 "selection_criteria": "maximize_strength"
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -219,7 +219,7 @@ class TestIntroductionOrchestrationAPI:
             "urgency": "medium",
             "length": "moderate"
         })
-        
+
         mock_result = MagicMock()
         mock_result.recipient_did = "did:plc:carol"
         mock_result.recipient_name = "Carol"
@@ -232,9 +232,9 @@ class TestIntroductionOrchestrationAPI:
         mock_result.followup_timing_days = 5
         mock_result.success_probability = 75
         mock_result.personalization_score = 85
-        
+
         mock_agent_service.generate_intro_request = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/intros/generate-request",
@@ -249,7 +249,7 @@ class TestIntroductionOrchestrationAPI:
                 "relationship_data": {}
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -267,9 +267,9 @@ class TestIntroductionOrchestrationAPI:
         mock_result.risk_factors = ["Multiple hops"]
         mock_result.mitigation_strategies = ["Build rapport first"]
         mock_result.alternative_paths = []
-        
+
         mock_agent_service.plan_intro_orchestration = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/intros/plan-orchestration",
@@ -281,7 +281,7 @@ class TestIntroductionOrchestrationAPI:
                 "introduction_purpose": "Networking"
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -299,9 +299,9 @@ class TestIntroductionOrchestrationAPI:
         mock_result.recommended_approach = "Direct request"
         mock_result.timing_recommendation = "now"
         mock_result.alternative_suggestions = []
-        
+
         mock_agent_service.assess_intro_feasibility = AsyncMock(return_value=mock_result)
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/intros/assess-feasibility",
@@ -314,7 +314,7 @@ class TestIntroductionOrchestrationAPI:
                 "timing_context": None
             }
         )
-        
+
         # Assert
         assert response.status_code == 200
         data = response.json()
@@ -331,13 +331,13 @@ class TestAPIErrorHandling:
         mock_agent_service.extract_relationships_from_text = AsyncMock(
             side_effect=Exception("Extraction failed")
         )
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/relationships/extract",
             json={"text": "test text"}
         )
-        
+
         # Assert
         assert response.status_code == 500
         assert "failed" in response.json()["detail"].lower()
@@ -348,7 +348,7 @@ class TestAPIErrorHandling:
         mock_agent_service.generate_intro_request = AsyncMock(
             side_effect=Exception("Generation failed")
         )
-        
+
         # Act
         response = client.post(
             "/api/v1/agents/intros/generate-request",
@@ -363,7 +363,7 @@ class TestAPIErrorHandling:
                 "relationship_data": {}
             }
         )
-        
+
         # Assert
         assert response.status_code == 500
 
@@ -381,7 +381,7 @@ class TestInputValidation:
                 "claimed_strength": 150  # Invalid - should be 0-100
             }
         )
-        
+
         # Assert
         assert response.status_code == 422  # Validation error
 
@@ -392,7 +392,7 @@ class TestInputValidation:
             "/api/v1/agents/relationships/extract",
             json={}  # Missing 'text' field
         )
-        
+
         # Assert
         assert response.status_code == 422
 

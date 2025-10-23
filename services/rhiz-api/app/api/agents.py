@@ -25,14 +25,14 @@ router = APIRouter(prefix="/api/v1/agents", tags=["agents"])
 
 class ExtractRelationshipsRequest(BaseModel):
     """Request to extract relationships from text"""
-    
+
     text: str = Field(..., description="Unstructured text containing relationship information")
     context_hint: Optional[str] = Field(None, description="Optional context to guide extraction")
 
 
 class ExtractRelationshipsResponse(BaseModel):
     """Response with extracted relationships"""
-    
+
     relationships: List[Dict[str, Any]]
     total_found: int
     extraction_quality: int
@@ -43,10 +43,10 @@ class ExtractRelationshipsResponse(BaseModel):
 async def extract_relationships(request: ExtractRelationshipsRequest):
     """
     Extract structured relationship data from unstructured text
-    
+
     This protocol feature allows extracting machine-readable relationships
     from natural language text (bios, profiles, descriptions, etc.).
-    
+
     Example:
         Input: "Alice and Bob co-founded TechCo in 2020 and worked together for 3 years"
         Output: Structured relationship record with participants, type, strength, context
@@ -56,7 +56,7 @@ async def extract_relationships(request: ExtractRelationshipsRequest):
         result = await agent_service.extract_relationships_from_text(
             text=request.text, context_hint=request.context_hint
         )
-        
+
         # Convert to dict for response
         return ExtractRelationshipsResponse(
             relationships=[rel.model_dump() for rel in result.relationships],
@@ -73,14 +73,14 @@ async def extract_relationships(request: ExtractRelationshipsRequest):
 
 class AssessQualityRequest(BaseModel):
     """Request to assess relationship quality"""
-    
+
     relationship_context: str = Field(..., description="Description of the relationship")
     claimed_strength: int = Field(..., ge=0, le=100, description="Claimed strength score (0-100)")
 
 
 class AssessQualityResponse(BaseModel):
     """Response with quality assessment"""
-    
+
     has_sufficient_context: bool
     has_quantifiable_metrics: bool
     has_verification_potential: bool
@@ -94,7 +94,7 @@ class AssessQualityResponse(BaseModel):
 async def assess_relationship_quality(request: AssessQualityRequest):
     """
     Assess the quality of a relationship description
-    
+
     Evaluates whether the relationship context justifies the claimed strength
     and provides suggestions for improvement.
     """
@@ -104,7 +104,7 @@ async def assess_relationship_quality(request: AssessQualityRequest):
             relationship_context=request.relationship_context,
             claimed_strength=request.claimed_strength,
         )
-        
+
         return AssessQualityResponse(
             has_sufficient_context=result.has_sufficient_context,
             has_quantifiable_metrics=result.has_quantifiable_metrics,
@@ -127,7 +127,7 @@ async def assess_relationship_quality(request: AssessQualityRequest):
 
 class ExplainTrustRequest(BaseModel):
     """Request to explain trust score"""
-    
+
     entity_did: str = Field(..., description="DID of the entity")
     trust_metrics: Dict[str, Any] = Field(..., description="Trust metrics data")
     network_context: Dict[str, Any] = Field(..., description="Network statistics for comparison")
@@ -135,7 +135,7 @@ class ExplainTrustRequest(BaseModel):
 
 class ExplainTrustResponse(BaseModel):
     """Response with trust explanation"""
-    
+
     overall_trust_score: int
     explanation_summary: str
     breakdown: List[Dict[str, Any]]
@@ -150,7 +150,7 @@ class ExplainTrustResponse(BaseModel):
 async def explain_trust_score(request: ExplainTrustRequest):
     """
     Generate human-readable explanation of trust score
-    
+
     Breaks down trust metrics into understandable components and
     provides context relative to the network.
     """
@@ -161,7 +161,7 @@ async def explain_trust_score(request: ExplainTrustRequest):
             trust_metrics=request.trust_metrics,
             network_context=request.network_context,
         )
-        
+
         return ExplainTrustResponse(
             overall_trust_score=result.overall_trust_score,
             explanation_summary=result.explanation_summary,
@@ -181,7 +181,7 @@ async def explain_trust_score(request: ExplainTrustRequest):
 
 class ExplainConvictionRequest(BaseModel):
     """Request to explain conviction score"""
-    
+
     relationship_uri: str = Field(..., description="AT URI of the relationship")
     conviction_data: Dict[str, Any] = Field(..., description="Conviction calculation data")
     attestations: List[Dict[str, Any]] = Field(..., description="List of attestations")
@@ -189,7 +189,7 @@ class ExplainConvictionRequest(BaseModel):
 
 class ExplainConvictionResponse(BaseModel):
     """Response with conviction explanation"""
-    
+
     conviction_score: int
     confidence_level: str
     attestation_summary: str
@@ -204,7 +204,7 @@ class ExplainConvictionResponse(BaseModel):
 async def explain_conviction_score(request: ExplainConvictionRequest):
     """
     Explain conviction score for a relationship
-    
+
     Describes why a relationship has its network confidence score
     based on attestations and attester reputation.
     """
@@ -215,7 +215,7 @@ async def explain_conviction_score(request: ExplainConvictionRequest):
             conviction_data=request.conviction_data,
             attestations=request.attestations,
         )
-        
+
         return ExplainConvictionResponse(
             conviction_score=result.conviction_score,
             confidence_level=result.confidence_level,
@@ -235,7 +235,7 @@ async def explain_conviction_score(request: ExplainConvictionRequest):
 
 class ExplainPathRequest(BaseModel):
     """Request to explain path choice"""
-    
+
     from_did: str = Field(..., description="Starting entity DID")
     to_did: str = Field(..., description="Target entity DID")
     chosen_path: Dict[str, Any] = Field(..., description="The selected path data")
@@ -245,7 +245,7 @@ class ExplainPathRequest(BaseModel):
 
 class ExplainPathResponse(BaseModel):
     """Response with path explanation"""
-    
+
     path_strength: int
     hop_count: int
     why_optimal: str
@@ -261,7 +261,7 @@ class ExplainPathResponse(BaseModel):
 async def explain_path_choice(request: ExplainPathRequest):
     """
     Explain why a particular introduction path was chosen
-    
+
     Describes the tradeoffs between different paths and why
     the chosen path is optimal.
     """
@@ -274,7 +274,7 @@ async def explain_path_choice(request: ExplainPathRequest):
             alternative_paths=request.alternative_paths,
             selection_criteria=request.selection_criteria,
         )
-        
+
         return ExplainPathResponse(
             path_strength=result.path_strength,
             hop_count=result.hop_count,
@@ -299,7 +299,7 @@ async def explain_path_choice(request: ExplainPathRequest):
 
 class GenerateIntroRequestModel(BaseModel):
     """Request to generate introduction request"""
-    
+
     requester_did: str
     requester_context: str
     intermediary_did: str
@@ -312,7 +312,7 @@ class GenerateIntroRequestModel(BaseModel):
 
 class IntroductionMessageResponse(BaseModel):
     """Response with introduction message"""
-    
+
     recipient_did: str
     recipient_name: str
     subject_line: str
@@ -330,7 +330,7 @@ class IntroductionMessageResponse(BaseModel):
 async def generate_intro_request(request: GenerateIntroRequestModel):
     """
     Generate personalized introduction request message
-    
+
     Creates a tailored message asking an intermediary to facilitate
     an introduction through the trust network.
     """
@@ -346,7 +346,7 @@ async def generate_intro_request(request: GenerateIntroRequestModel):
             introduction_purpose=request.introduction_purpose,
             relationship_data=request.relationship_data,
         )
-        
+
         return IntroductionMessageResponse(
             recipient_did=result.recipient_did,
             recipient_name=result.recipient_name,
@@ -369,7 +369,7 @@ async def generate_intro_request(request: GenerateIntroRequestModel):
 
 class PlanOrchestrationRequest(BaseModel):
     """Request to plan introduction orchestration"""
-    
+
     requester_did: str
     target_did: str
     intro_path: List[str]
@@ -379,7 +379,7 @@ class PlanOrchestrationRequest(BaseModel):
 
 class OrchestrationPlanResponse(BaseModel):
     """Response with orchestration plan"""
-    
+
     total_steps: int
     steps: List[Dict[str, Any]]
     timeline_days: int
@@ -393,7 +393,7 @@ class OrchestrationPlanResponse(BaseModel):
 async def plan_intro_orchestration(request: PlanOrchestrationRequest):
     """
     Plan multi-step introduction orchestration
-    
+
     Creates a step-by-step plan for orchestrating an introduction
     through multiple intermediaries in the trust network.
     """
@@ -406,7 +406,7 @@ async def plan_intro_orchestration(request: PlanOrchestrationRequest):
             relationship_data=request.relationship_data,
             introduction_purpose=request.introduction_purpose,
         )
-        
+
         return OrchestrationPlanResponse(
             total_steps=result.total_steps,
             steps=[s.model_dump() for s in result.steps],
@@ -425,7 +425,7 @@ async def plan_intro_orchestration(request: PlanOrchestrationRequest):
 
 class AssessFeasibilityRequest(BaseModel):
     """Request to assess introduction feasibility"""
-    
+
     requester_did: str
     target_did: str
     proposed_path: Dict[str, Any]
@@ -436,7 +436,7 @@ class AssessFeasibilityRequest(BaseModel):
 
 class FeasibilityResponse(BaseModel):
     """Response with feasibility assessment"""
-    
+
     feasibility_score: int
     feasibility_level: str
     success_factors: List[str]
@@ -450,7 +450,7 @@ class FeasibilityResponse(BaseModel):
 async def assess_intro_feasibility(request: AssessFeasibilityRequest):
     """
     Assess feasibility of introduction before attempting
-    
+
     Evaluates whether an introduction is likely to succeed
     and provides recommendations.
     """
@@ -464,7 +464,7 @@ async def assess_intro_feasibility(request: AssessFeasibilityRequest):
             introduction_purpose=request.introduction_purpose,
             timing_context=request.timing_context,
         )
-        
+
         return FeasibilityResponse(
             feasibility_score=result.feasibility_score,
             feasibility_level=result.feasibility_level,

@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 class ProtocolAgentService:
     """
     Service wrapper for BAML protocol agents
-    
+
     Provides type-safe, tested interfaces to AI functions for:
     - Relationship data extraction
     - Trust metric explanations
@@ -55,14 +55,14 @@ class ProtocolAgentService:
     ) -> RelationshipExtractionResult:
         """
         Extract structured relationship data from unstructured text
-        
+
         Args:
             text: Unstructured text containing relationship information
             context_hint: Optional context to guide extraction
-            
+
         Returns:
             RelationshipExtractionResult with extracted relationships
-            
+
         Example:
             >>> result = await service.extract_relationships_from_text(
             ...     "Alice and Bob co-founded TechCo in 2020 and worked together for 3 years"
@@ -85,11 +85,11 @@ class ProtocolAgentService:
     ) -> RelationshipQualityAssessment:
         """
         Assess the quality of a relationship description
-        
+
         Args:
             relationship_context: Description of the relationship
             claimed_strength: Claimed strength score (0-100)
-            
+
         Returns:
             RelationshipQualityAssessment with quality metrics
         """
@@ -114,12 +114,12 @@ class ProtocolAgentService:
     ) -> TrustExplanation:
         """
         Generate human-readable explanation of trust score
-        
+
         Args:
             entity_did: DID of the entity
             trust_metrics: Trust metrics data (dict from TrustMetrics model)
             network_context: Network statistics for comparison
-            
+
         Returns:
             TrustExplanation with detailed breakdown
         """
@@ -141,12 +141,12 @@ class ProtocolAgentService:
     ) -> ConvictionExplanation:
         """
         Explain conviction score for a relationship
-        
+
         Args:
             relationship_uri: AT URI of the relationship
             conviction_data: Conviction calculation data
             attestations: List of attestations
-            
+
         Returns:
             ConvictionExplanation with detailed reasoning
         """
@@ -173,14 +173,14 @@ class ProtocolAgentService:
     ) -> PathExplanation:
         """
         Explain why a particular introduction path was chosen
-        
+
         Args:
             from_did: Starting entity DID
             to_did: Target entity DID
             chosen_path: The selected path data
             alternative_paths: Other paths that were considered
             selection_criteria: Criteria used for selection
-            
+
         Returns:
             PathExplanation with reasoning
         """
@@ -216,7 +216,7 @@ class ProtocolAgentService:
     ) -> IntroductionMessage:
         """
         Generate personalized introduction request message
-        
+
         Args:
             requester_did: DID of person requesting intro
             requester_context: Context about requester
@@ -226,7 +226,7 @@ class ProtocolAgentService:
             target_context: Context about target
             introduction_purpose: Why this intro matters
             relationship_data: Relationship strengths and context
-            
+
         Returns:
             IntroductionMessage with personalized content
         """
@@ -258,14 +258,14 @@ class ProtocolAgentService:
     ) -> ForwardingIntro:
         """
         Generate forwarding introduction text for intermediary
-        
+
         Args:
             requester_context: Context about requester
             target_context: Context about target
             intermediary_relationships: How intermediary knows both parties
             introduction_purpose: Why this intro matters
             requested_outcome: Desired outcome (meeting, email, advice, etc.)
-            
+
         Returns:
             ForwardingIntro with text to forward
         """
@@ -289,13 +289,13 @@ class ProtocolAgentService:
     ) -> FollowupMessage:
         """
         Generate appropriate followup message
-        
+
         Args:
             original_message: The original message sent
             days_since_sent: Days since original was sent
             any_responses: Whether any responses were received
             new_context: New information to mention
-            
+
         Returns:
             FollowupMessage with followup content
         """
@@ -323,14 +323,14 @@ class ProtocolAgentService:
     ) -> IntroOrchestrationPlan:
         """
         Plan multi-step introduction orchestration
-        
+
         Args:
             requester_did: DID of requester
             target_did: DID of target
             intro_path: List of DIDs in the introduction path
             relationship_data: Trust scores and context for each hop
             introduction_purpose: Why this intro matters
-            
+
         Returns:
             IntroOrchestrationPlan with step-by-step plan
         """
@@ -360,7 +360,7 @@ class ProtocolAgentService:
     ) -> IntroFeasibility:
         """
         Assess feasibility of introduction before attempting
-        
+
         Args:
             requester_did: DID of requester
             target_did: DID of target
@@ -368,7 +368,7 @@ class ProtocolAgentService:
             relationship_data: Relationship strengths and context
             introduction_purpose: Why this intro matters
             timing_context: Any timing considerations
-            
+
         Returns:
             IntroFeasibility with assessment
         """
@@ -396,7 +396,7 @@ _protocol_agent_service: Optional[ProtocolAgentService] = None
 def get_protocol_agent_service() -> ProtocolAgentService:
     """
     Get singleton instance of ProtocolAgentService
-    
+
     Returns:
         ProtocolAgentService instance
     """

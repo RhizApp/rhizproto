@@ -149,7 +149,7 @@ function ExtractRelationshipsFromText(
   prompt #"
     Extract all relationships from this text:
     {{ text }}
-    
+
     Return structured JSON matching the schema.
   "#
 }
@@ -175,7 +175,7 @@ from app.generated.baml_client.types import RelationshipExtractionResult
 class ProtocolAgentService:
     def __init__(self):
         self.client = b
-    
+
     async def extract_relationships(self, text: str) -> RelationshipExtractionResult:
         result = await self.client.ExtractRelationshipsFromText(text=text)
         return result  # Type-safe!
