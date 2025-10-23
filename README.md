@@ -212,19 +212,26 @@ Rhiz Protocol is built on the Authenticated Transfer Protocol ("ATP" or "atproto
 
 ## 📖 Documentation
 
-### Start Here
-- **[Protocol Specification](PROTOCOL_SPECIFICATION.md)** ⭐ - Complete formal spec
-- **[Protocol Roadmap](RHIZ_PROTOCOL_ROADMAP.md)** - Development timeline
-- **[AT Protocol Implementation Guide](AT_PROTOCOL_IMPLEMENTATION_GUIDE.md)** - Reference implementation
+### 🌟 Start Here
+- **[START_HERE.md](START_HERE.md)** ⭐ - Navigation guide and quick start
+- **[STATUS.md](STATUS.md)** - Current implementation status
+- **[Protocol Specification](PROTOCOL_SPECIFICATION.md)** - Complete formal spec
+- **[Protocol Roadmap](RHIZ_PROTOCOL_ROADMAP.md)** - 3-year development timeline
 
-### Implementation Details
-- **[Project Overview](PROJECT_OVERVIEW.md)** - System architecture
+### 🛠️ Implementation Guides
+- **[AT Protocol Implementation Guide](AT_PROTOCOL_IMPLEMENTATION_GUIDE.md)** - How to implement the protocol
+- **[AT Protocol Native Migration](AT_PROTOCOL_NATIVE_MIGRATION.md)** - Architecture decisions
+- **[Quick Start Guide](QUICK_START_GUIDE.md)** - Get running in 30 minutes
+
+### 🏗️ Project Documentation
+- **[Project Overview](PROJECT_OVERVIEW.md)** - System architecture and use cases
 - **[Lexicon Schemas](lexicons/net/rhiz/)** - AT Protocol schema definitions
 - **[Interop Tests](interop-test-files/rhiz/)** - Test data and validation
 
-### Historical Context
-- **[AT Protocol Native Migration](AT_PROTOCOL_NATIVE_MIGRATION.md)** - Architecture decisions
-- **[Refactor Status](REFACTOR_STATUS.md)** - Foundation completion
+### 📋 Additional Resources
+- **[Security](SECURITY.md)** - Security policies and responsible disclosure
+- **[Contributing](CONTRIBUTORS.md)** - Contributing guidelines
+- **[Archive](docs/archive/)** - Historical implementation reports
 
 ## 🤝 Contributing
 
@@ -289,20 +296,28 @@ Bluesky Social PBC has committed to a software patent non-aggression pledge. For
 
 ---
 
-## 🎉 Recent Updates
+## 🎉 Current Status
 
-### October 2025 - AT Protocol Native Foundation ✅
+### October 2025 - Phase 1 Complete: AT Protocol Native Foundation ✅
 
 Complete architectural refactor to AT Protocol-native implementation:
-- **15 commits** with atomic, descriptive messages
-- **5,300+ lines** of code and documentation
 - **11 Lexicon schemas** validated and generating types
 - **DIDs as primary keys** throughout the system
 - **Content-addressed records** with AT URIs + CIDs
 - **Firehose indexer** for real-time updates
 - **Federation-ready** architecture
+- **TypeScript + Python SDKs** updated
+- **Database migration** for DID-native operations
 
-See [IMPLEMENTATION_COMPLETE.md](IMPLEMENTATION_COMPLETE.md) for full details.
+### Next: Phase 2A - Attestation System (Q1 2026)
+
+Network-verified relationships with conviction scores (0-100):
+- Reputation-weighted attestations
+- Temporal decay algorithms
+- API endpoints and UI components
+- 8-week implementation plan ready
+
+**For detailed status:** See [STATUS.md](STATUS.md)
 
 ---
 

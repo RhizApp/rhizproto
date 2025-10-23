@@ -14,10 +14,10 @@ interface AttestationButtonProps {
   className?: string
 }
 
-export function AttestationButton({ 
-  relationshipUri, 
+export function AttestationButton({
+  relationshipUri,
   onAttested,
-  className = '' 
+  className = ''
 }: AttestationButtonProps) {
   const [showForm, setShowForm] = useState(false)
   const [type, setType] = useState<'verify' | 'dispute' | 'strengthen' | 'weaken'>('verify')
@@ -49,7 +49,7 @@ export function AttestationButton({
       setEvidence('')
       setSuggestedStrength(undefined)
       onAttested?.()
-      
+
       alert('Attestation submitted successfully!')
     } catch (err) {
       console.error('Failed to submit attestation:', err)
@@ -61,7 +61,7 @@ export function AttestationButton({
 
   if (!showForm) {
     return (
-      <Button 
+      <Button
         onClick={() => setShowForm(true)}
         className={className}
         variant="outline"
@@ -75,13 +75,13 @@ export function AttestationButton({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
         <h3 className="text-xl font-bold mb-4">Attest to Relationship</h3>
-        
+
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded text-red-800 text-sm">
             {error}
           </div>
         )}
-        
+
         {/* Attestation Type */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -197,15 +197,15 @@ export function AttestationButton({
 
         {/* Actions */}
         <div className="flex justify-end gap-3">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setShowForm(false)}
             disabled={submitting}
           >
             Cancel
           </Button>
-          <Button 
-            onClick={handleSubmit} 
+          <Button
+            onClick={handleSubmit}
             disabled={submitting}
           >
             {submitting ? 'Submitting...' : 'Submit Attestation'}

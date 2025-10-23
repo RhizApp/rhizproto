@@ -35,9 +35,9 @@ interface RelationshipWithConvictionProps {
   showAttestButton?: boolean
 }
 
-export function RelationshipWithConviction({ 
+export function RelationshipWithConviction({
   relationship,
-  showAttestButton = true 
+  showAttestButton = true
 }: RelationshipWithConvictionProps) {
   const [conviction, setConviction] = useState<ConvictionData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -51,12 +51,12 @@ export function RelationshipWithConviction({
     try {
       setLoading(true)
       setError(undefined)
-      
+
       // TODO: Use RhizClient to fetch conviction
       // const client = new RhizClient({ apiUrl: '...' })
       // const result = await client.conviction.getConviction(relationship.uri)
       // setConviction(result.conviction)
-      
+
       // Simulated data for now
       await new Promise(resolve => setTimeout(resolve, 500))
       setConviction({
@@ -91,7 +91,7 @@ export function RelationshipWithConviction({
             {relationship.type} relationship • Strength: {relationship.strength}/100
           </p>
         </div>
-        
+
         {/* Conviction Badge */}
         {!loading && conviction && conviction.attestationCount > 0 && (
           <ConvictionBadge

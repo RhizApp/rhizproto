@@ -13,9 +13,9 @@ interface ConvictionBadgeProps {
   showDetails?: boolean
 }
 
-export function ConvictionBadge({ 
-  score, 
-  attestationCount, 
+export function ConvictionBadge({
+  score,
+  attestationCount,
   trend = 'stable',
   className = '',
   showDetails = true
@@ -27,14 +27,14 @@ export function ConvictionBadge({
     if (score >= 40) return 'bg-orange-100 text-orange-800 border-orange-300'
     return 'bg-red-100 text-red-800 border-red-300'
   }
-  
+
   // Trend icon
   const trendIcon = {
     increasing: '↗',
     stable: '→',
     decreasing: '↘'
   }[trend]
-  
+
   const trendColor = {
     increasing: 'text-green-600',
     stable: 'text-gray-500',
@@ -42,7 +42,7 @@ export function ConvictionBadge({
   }[trend]
 
   return (
-    <div 
+    <div
       className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border ${getColorClasses(score)} ${className}`}
       title={`Network conviction: ${score}/100 based on ${attestationCount} attestation${attestationCount === 1 ? '' : 's'}`}
     >
@@ -72,7 +72,7 @@ export function ConvictionBadgeCompact({ score, className = '' }: { score: numbe
   }
 
   return (
-    <div 
+    <div
       className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${getColorClasses(score)} text-white font-bold ${className}`}
       title={`Conviction: ${score}%`}
     >

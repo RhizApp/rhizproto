@@ -48,7 +48,7 @@ console.log('Attestation created:', attestation.uri)
 ### Attestation Types
 
 - **`verify`** - Confirms the relationship exists as stated
-- **`dispute`** - Questions the accuracy of the relationship  
+- **`dispute`** - Questions the accuracy of the relationship
 - **`strengthen`** - Suggests relationship is stronger than stated
 - **`weaken`** - Suggests relationship is weaker than stated
 
@@ -142,7 +142,7 @@ do {
     limit: 50,
     cursor
   })
-  
+
   allAttestations.push(...result.attestations)
   cursor = result.cursor
 } while (cursor)
@@ -182,10 +182,10 @@ async function main() {
     apiUrl: 'https://api.rhiz.network',
     atproto: { service: 'https://bsky.social' }
   })
-  
+
   // Login
   await client.login('alice.bsky.social', 'password')
-  
+
   // Create relationship
   const relationship = await client.repo.createRelationship('did:plc:alice', {
     participants: ['did:plc:alice', 'did:plc:bob'],
@@ -194,9 +194,9 @@ async function main() {
     context: 'Co-founded TechCo in 2020',
     // ... other fields
   })
-  
+
   console.log('Relationship created:', relationship.uri)
-  
+
   // Get initial conviction (should be 0 - no attestations yet)
   try {
     const conviction = await client.conviction.getConviction(relationship.uri)
@@ -204,10 +204,10 @@ async function main() {
   } catch (e) {
     console.log('No attestations yet')
   }
-  
+
   // Login as another user to attest
   await client.login('carol.bsky.social', 'password')
-  
+
   // Attest to the relationship
   await client.conviction.attestRelationship({
     targetRelationship: relationship.uri,
@@ -215,20 +215,20 @@ async function main() {
     confidence: 90,
     evidence: 'I know both Alice and Bob from TechCo'
   })
-  
+
   // Wait a moment for indexing
   await new Promise(resolve => setTimeout(resolve, 2000))
-  
+
   // Get updated conviction
   const updatedConviction = await client.conviction.getConviction(relationship.uri)
   console.log('Updated conviction:', updatedConviction.conviction.score)
   // Should be > 0 now
-  
+
   // List all attestations
   const attestations = await client.conviction.listAttestations({
     uri: relationship.uri
   })
-  
+
   console.log(`Attestations: ${attestations.attestations.length}`)
   for (const att of attestations.attestations) {
     console.log(`- ${att.record.attestationType} by ${att.attester?.name} (${att.record.confidence}%)`)
@@ -261,10 +261,10 @@ try {
 All types are fully typed for autocomplete and type safety:
 
 ```typescript
-import type { 
-  ConvictionScore, 
+import type {
+  ConvictionScore,
   Attestation,
-  AttestationParams 
+  AttestationParams
 } from '@atproto/rhiz-sdk'
 
 // ConvictionScore includes:
@@ -354,7 +354,7 @@ if (conviction.conviction.score >= 80) {
 
 ---
 
-**SDK Version:** 0.1.0 (with attestation support)  
-**Protocol Version:** 1.0  
+**SDK Version:** 0.1.0 (with attestation support)
+**Protocol Version:** 1.0
 **Last Updated:** October 22, 2025
 

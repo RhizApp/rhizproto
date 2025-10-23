@@ -90,28 +90,45 @@ This shows our 3-year plan:
 
 ## 📚 Document Structure
 
-### Protocol Level (Chain-Agnostic)
+### 🌟 Essential Documents (Start Here)
+
+| Document | Purpose | Time |
+|----------|---------|------|
+| [README.md](README.md) | Project overview and quick start | 5 min |
+| [START_HERE.md](START_HERE.md) | Navigation guide (you are here) | - |
+| [STATUS.md](STATUS.md) | Current implementation status | 10 min |
+
+### 📖 Protocol Specification (Canonical)
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
-| [PROTOCOL_SPECIFICATION.md](PROTOCOL_SPECIFICATION.md) | Formal protocol spec | Protocol designers, implementers |
-| [RHIZ_PROTOCOL_ROADMAP.md](RHIZ_PROTOCOL_ROADMAP.md) | Development roadmap | Contributors, stakeholders |
+| [PROTOCOL_SPECIFICATION.md](PROTOCOL_SPECIFICATION.md) | Formal protocol specification | Protocol designers, implementers |
+| [RHIZ_PROTOCOL_ROADMAP.md](RHIZ_PROTOCOL_ROADMAP.md) | 3-year development roadmap | Contributors, stakeholders |
 
-### Implementation Level (AT Protocol)
+### 🛠️ Implementation Guides
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
-| [AT_PROTOCOL_IMPLEMENTATION_GUIDE.md](AT_PROTOCOL_IMPLEMENTATION_GUIDE.md) | Reference implementation | Developers, implementers |
-| [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | System architecture | Developers building on Rhiz |
-| [README.md](README.md) | Quick start guide | First-time visitors |
+| [AT_PROTOCOL_IMPLEMENTATION_GUIDE.md](AT_PROTOCOL_IMPLEMENTATION_GUIDE.md) | How to implement Rhiz on AT Protocol | Developers, implementers |
+| [AT_PROTOCOL_NATIVE_MIGRATION.md](AT_PROTOCOL_NATIVE_MIGRATION.md) | Architecture decisions and patterns | Technical deep dive |
+| [QUICK_START_GUIDE.md](QUICK_START_GUIDE.md) | Get running in 30 minutes | New developers |
+| [RHIZ_ATTESTATION_IMPLEMENTATION_PLAN.md](RHIZ_ATTESTATION_IMPLEMENTATION_PLAN.md) | Phase 2A implementation plan | Contributors |
 
-### Technical Details
+### 🏗️ Project Documentation
 
 | Document | Purpose | Audience |
+|----------|---------|----------|
+| [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | System architecture and use cases | Developers building on Rhiz |
+| [SECURITY.md](SECURITY.md) | Security policies and disclosure | Security researchers |
+| [CONTRIBUTORS.md](CONTRIBUTORS.md) | Contributing guidelines | Contributors |
+
+### 🔧 Technical Resources
+
+| Resource | Purpose | Audience |
 |----------|---------|----------|
 | [Lexicon Schemas](lexicons/net/rhiz/) | AT Protocol schema definitions | Protocol implementers |
 | [Interop Tests](interop-test-files/rhiz/) | Test data and validation | Developers, QA |
-| [AT_PROTOCOL_NATIVE_MIGRATION.md](AT_PROTOCOL_NATIVE_MIGRATION.md) | Architecture decisions | Technical deep dive |
+| [Archive](docs/archive/) | Historical implementation reports | Reference only |
 
 ---
 
@@ -196,9 +213,9 @@ console.log('Created:', relationship.uri)
 
 ## Current Status
 
-### ✅ Completed (October 2025)
+### ✅ Phase 1 Complete: AT Protocol Native Foundation (October 2025)
 
-**AT Protocol Native Foundation:**
+**Core Infrastructure:**
 - 11 Lexicon schemas validated
 - DID-native architecture
 - Content-addressed records
@@ -211,32 +228,34 @@ console.log('Created:', relationship.uri)
 - Implementation guide
 - 3-year roadmap
 
-### 🔄 In Progress (Q4 2025 - Q1 2026)
+**Detailed Status:** See [STATUS.md](STATUS.md) for comprehensive current status
 
-**Attestation System (Phase 2A):**
-- Network conviction mechanism
-- Reputation-weighted validation
+### 🔄 Phase 2A Planning: Attestation System (Q1 2026)
+
+**Network Verification:**
+- Conviction score algorithm (0-100)
+- Reputation-weighted attestations
 - API endpoints for attestations
 - UI components (badges, buttons)
 - 8-week implementation plan ready
 
 See [RHIZ_ATTESTATION_IMPLEMENTATION_PLAN.md](RHIZ_ATTESTATION_IMPLEMENTATION_PLAN.md) for details.
 
-### 🔮 Planned (Q2 2026+)
+### 🔮 Planned Phases (Q2 2026+)
 
-**Relationship Quality:**
-- Rich context structures
-- Relationship analytics
-- Advanced trust metrics
-- Smart recommendations
+**Phase 2B: Triple-Based Claims**
+- Granular field attestations
+- RDF compatibility
 
-**Developer Experience:**
-- Improved SDK
-- Interactive documentation
-- Developer tools (CLI, visualizer)
-- Integration guides
+**Phase 2C: Expertise & Credentials**
+- Skill attestations
+- Professional networks
 
-See [RHIZ_PROTOCOL_ROADMAP.md](RHIZ_PROTOCOL_ROADMAP.md) for full timeline.
+**Phase 3-4: Scale & Polish**
+- Advanced features
+- Performance optimization
+
+See [RHIZ_PROTOCOL_ROADMAP.md](RHIZ_PROTOCOL_ROADMAP.md) for full 3-year timeline.
 
 ---
 
