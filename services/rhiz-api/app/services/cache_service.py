@@ -1,10 +1,15 @@
 """
-Redis caching service for high-performance graph queries
-Implements intelligent caching strategies for trust metrics and pathfinding
+Unified caching service for high-performance queries
+
+Implements intelligent caching with adapter pattern:
+- Redis backend for production (distributed)
+- Memory backend for development/fallback
+- Automatic failover and recovery
 """
 
 import json
 import hashlib
+import logging
 from typing import Any, Dict, List, Optional, Union
 from datetime import datetime, timedelta
 
@@ -12,6 +17,9 @@ import redis.asyncio as redis
 from redis.asyncio import Redis
 
 from app.config import settings
+from app.infrastructure.cache import CacheService as UnifiedCacheService
+
+logger = logging.getLogger(__name__)
 
 
 class CacheService:
@@ -402,44 +410,73 @@ class CacheService:
         }
 
 
-# Global cache instance
+# Global cache instance (legacy)
 cache_service = CacheService()
+
+
+# ==========================================
+# Unified Cache Service (New)
+# ==========================================
+
+_unified_cache: Optional[UnifiedCacheService] = None
+
+
+def get_unified_cache() -> UnifiedCacheService:
+    """
+    Get singleton unified cache service instance
+
+    Returns:
+        UnifiedCacheService with adapter pattern (Redis or Memory)
+    """
+    global _unified_cache
+    if _unified_cache is None:
+        _unified_cache = UnifiedCacheService(
+            backend=getattr(settings, "cache_backend", "memory"),
+            redis_url=settings.redis_url_string,
+            fallback_to_memory=True,
+        )
+        logger.info("Unified cache service initialized")
+
+    return _unified_cache
+
+
+async def close_unified_cache():
+    """Close unified cache service connections"""
+    global _unified_cache
+    if _unified_cache:
+        await _unified_cache.close()
+        _unified_cache = None
+        logger.info("Unified cache service closed")
 
 
 # Decorator for caching function results
 def cache_result(ttl: int = 3600, key_prefix: str = "func"):
     """Decorator to cache function results"""
+
     def decorator(func):
         async def wrapper(*args, **kwargs):
             # Generate cache key from function name and arguments
-            key_data = {
-                "func": func.__name__,
-                "args": args,
-                "kwargs": kwargs
-            }
+            key_data = {"func": func.__name__, "args": args, "kwargs": kwargs}
             key_hash = hashlib.md5(
                 json.dumps(key_data, sort_keys=True, default=str).encode()
             ).hexdigest()[:12]
-            
+
             cache_key = f"{key_prefix}:{func.__name__}:{key_hash}"
-            
+
             # Try to get from cache
             await cache_service.connect()
             cached_result = await cache_service.redis.get(cache_key)
-            
+
             if cached_result:
                 return json.loads(cached_result)
-            
+
             # Execute function and cache result
             result = await func(*args, **kwargs)
-            
-            await cache_service.redis.setex(
-                cache_key,
-                ttl,
-                json.dumps(result, default=str)
-            )
-            
+
+            await cache_service.redis.setex(cache_key, ttl, json.dumps(result, default=str))
+
             return result
-        
+
         return wrapper
+
     return decorator

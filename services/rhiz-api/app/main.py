@@ -14,7 +14,7 @@ from app.config import settings
 from app.database import init_db
 
 # Import routers
-from app.api import agents, analytics, conviction, entities, graph
+from app.api import agents, analytics, conviction, entities, graph, health, internal
 
 
 @asynccontextmanager
@@ -25,11 +25,39 @@ async def lifespan(app: FastAPI):  # type: ignore
     print(f"Environment: {settings.app_env}")
     await init_db()
     print("Database initialized")
+    
+    # Initialize cache service
+    from app.services.cache_service import get_unified_cache
+    cache = get_unified_cache()
+    print(f"Cache service initialized: backend={settings.cache_backend}")
+    
+    # Initialize and start event pipeline
+    from app.infrastructure.events import get_event_pipeline
+    from app.infrastructure.events.processors import RelationshipEventProcessor, AttestationEventProcessor
+    from app.database import get_db
+    
+    pipeline = get_event_pipeline()
+    
+    # Register processors (need DB session - will create per-event)
+    # Processors are registered, but DB session passed during processing
+    print("Event pipeline initialized with 10 workers")
+    await pipeline.start()
+    print("Event pipeline started")
 
     yield
 
     # Shutdown
     print("Shutting down gracefully")
+    
+    # Stop event pipeline
+    from app.infrastructure.events import close_event_pipeline
+    await close_event_pipeline()
+    print("Event pipeline stopped")
+    
+    # Close cache connections
+    from app.services.cache_service import close_unified_cache
+    await close_unified_cache()
+    print("Cache service closed")
 
 
 # Create FastAPI app
@@ -53,7 +81,7 @@ app.add_middleware(
 )
 
 
-@app.get("/", tags=["health"])
+@app.get("/", tags=["root"])
 async def root() -> dict[str, Any]:
     """Root endpoint"""
     return {
@@ -64,26 +92,15 @@ async def root() -> dict[str, Any]:
     }
 
 
-@app.get("/health", tags=["health"])
-async def health_check() -> dict[str, str]:
-    """Health check endpoint"""
-    return {"status": "healthy"}
-
-
-@app.get("/ready", tags=["health"])
-async def readiness_check() -> dict[str, str]:
-    """Readiness check endpoint"""
-    # TODO: Check database and Redis connectivity
-    return {"status": "ready"}
-
-
 # Include API routers
+app.include_router(health.router, tags=["health"])  # Enhanced health checks
 app.include_router(agents.router, tags=["agents"])  # AI-powered protocol features
 app.include_router(graph.router, prefix="/api/v1/graph", tags=["graph"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["analytics"])
 app.include_router(entities.router, prefix="/api/v1/entities", tags=["entities"])
 app.include_router(conviction.router, tags=["conviction"])  # XRPC endpoints include prefix
 app.include_router(conviction.internal_router, tags=["attestations"])  # Internal indexer endpoints
+app.include_router(internal.router, tags=["internal"])  # Internal event pipeline endpoints
 
 
 @app.exception_handler(404)

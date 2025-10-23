@@ -17,6 +17,7 @@ alembic = "^1.13.1"
 psycopg2-binary = "^2.9.9"
 pgvector = "^0.2.4"
 redis = "^5.0.1"
+redis-asyncio = "^5.0.1"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-multipart = "^0.0.6"

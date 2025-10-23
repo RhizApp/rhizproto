@@ -81,6 +81,14 @@ class Settings(BaseSettings):
     min_trust_strength: float = Field(default=0.5, alias="MIN_TRUST_STRENGTH")
     pathfinding_timeout: int = Field(default=30, alias="PATHFINDING_TIMEOUT")  # seconds
 
+    # Cache Settings
+    cache_backend: str = Field(default="memory", alias="CACHE_BACKEND")  # "memory" or "redis"
+    cache_default_ttl: int = Field(default=3600, alias="CACHE_DEFAULT_TTL")  # 1 hour
+    cache_max_memory_size: int = Field(default=10000, alias="CACHE_MAX_MEMORY_SIZE")  # keys
+    
+    # Internal API (for event pipeline)
+    internal_api_key: str = Field(default="dev-internal-key-change-in-prod", alias="INTERNAL_API_KEY")
+
     @property
     def database_url_string(self) -> str:
         """Get database URL as string"""
