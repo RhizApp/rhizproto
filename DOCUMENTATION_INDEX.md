@@ -113,23 +113,23 @@ See [`docs/archive/README.md`](docs/archive/README.md) for complete archive inde
 ## 📚 Document Categories Explained
 
 ### Canonical Documents
-**Purpose:** Define what Rhiz Protocol **is**  
-**Stability:** High - changes require community review  
+**Purpose:** Define what Rhiz Protocol **is**
+**Stability:** High - changes require community review
 **Examples:** PROTOCOL_SPECIFICATION.md, RHIZ_PROTOCOL_ROADMAP.md
 
 ### Implementation Guides
-**Purpose:** Explain **how to build** Rhiz Protocol  
-**Stability:** Medium - updated as patterns evolve  
+**Purpose:** Explain **how to build** Rhiz Protocol
+**Stability:** Medium - updated as patterns evolve
 **Examples:** AT_PROTOCOL_IMPLEMENTATION_GUIDE.md
 
 ### Project Documentation
-**Purpose:** Describe the **current state** of the project  
-**Stability:** Low - updated frequently  
+**Purpose:** Describe the **current state** of the project
+**Stability:** Low - updated frequently
 **Examples:** STATUS.md, PROJECT_OVERVIEW.md
 
 ### Technical Resources
-**Purpose:** Provide **schemas, tests, and references**  
-**Stability:** High for schemas, Medium for tests  
+**Purpose:** Provide **schemas, tests, and references**
+**Stability:** High for schemas, Medium for tests
 **Examples:** Lexicon schemas, Interop tests
 
 ---
@@ -252,14 +252,14 @@ rhizproto/
 
 ## 📞 Questions About Documentation?
 
-**GitHub Discussions:** For questions about using the docs  
-**GitHub Issues:** For reporting doc bugs or suggesting improvements  
+**GitHub Discussions:** For questions about using the docs
+**GitHub Issues:** For reporting doc bugs or suggesting improvements
 **Email:** docs@rhiz.network (for sensitive documentation issues)
 
 ---
 
-**Last Updated:** October 23, 2025  
-**Maintained by:** Rhiz Protocol Team  
+**Last Updated:** October 23, 2025
+**Maintained by:** Rhiz Protocol Team
 **License:** MIT / Apache 2.0 (like all project documentation)
 
 **Rhiz Protocol - Making relationships machine-readable.**
