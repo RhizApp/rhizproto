@@ -1,17 +1,18 @@
-'use client';
+'use client'
 
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/lib/api';
+import { useQuery } from '@tanstack/react-query'
+import { api } from '@/lib/api'
+import OpportunityFeed from '@/components/dashboard/widgets/OpportunityFeed'
 
 export default function DashboardPage() {
   // Example entity ID - in production this would come from auth
-  const entityId = 'demo_user_1';
+  const entityId = 'demo_user_1'
 
   const { data: trustHealth, isLoading } = useQuery({
     queryKey: ['trust-health', entityId],
     queryFn: () => api.getTrustHealth(entityId),
     enabled: false, // Disable for demo since entity may not exist
-  });
+  })
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -21,12 +22,14 @@ export default function DashboardPage() {
           <div className="flex h-16 justify-between">
             <div className="flex">
               <div className="flex flex-shrink-0 items-center">
-                <span className="text-xl font-bold text-primary-600">FundRhiz</span>
+                <span className="text-primary-600 text-xl font-bold">
+                  FundRhiz
+                </span>
               </div>
               <div className="ml-6 flex space-x-8">
                 <a
                   href="/dashboard"
-                  className="inline-flex items-center border-b-2 border-primary-500 px-1 pt-1 text-sm font-medium text-gray-900"
+                  className="border-primary-500 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium text-gray-900"
                 >
                   Dashboard
                 </a>
@@ -63,7 +66,11 @@ export default function DashboardPage() {
           <div className="card">
             <div className="text-sm font-medium text-gray-500">Trust Score</div>
             <div className="mt-2 text-3xl font-bold text-gray-900">
-              {isLoading ? '...' : trustHealth?.trust_score ? `${Math.round(trustHealth.trust_score * 100)}%` : 'N/A'}
+              {isLoading
+                ? '...'
+                : trustHealth?.trust_score
+                  ? `${Math.round(trustHealth.trust_score * 100)}%`
+                  : 'N/A'}
             </div>
             <div className="mt-1 text-xs text-gray-500">
               {trustHealth?.trust_level || 'No data'}
@@ -71,7 +78,9 @@ export default function DashboardPage() {
           </div>
 
           <div className="card">
-            <div className="text-sm font-medium text-gray-500">Network Size</div>
+            <div className="text-sm font-medium text-gray-500">
+              Network Size
+            </div>
             <div className="mt-2 text-3xl font-bold text-gray-900">
               {trustHealth?.network_size || 0}
             </div>
@@ -89,7 +98,9 @@ export default function DashboardPage() {
           </div>
 
           <div className="card">
-            <div className="text-sm font-medium text-gray-500">Recent Activity</div>
+            <div className="text-sm font-medium text-gray-500">
+              Recent Activity
+            </div>
             <div className="mt-2 text-3xl font-bold text-gray-900">
               {trustHealth?.recent_activity || 0}
             </div>
@@ -118,14 +129,20 @@ export default function DashboardPage() {
           {/* Recommendations */}
           <div className="card">
             <h2 className="mb-4 text-lg font-semibold">Recommendations</h2>
-            {trustHealth?.recommendations && trustHealth.recommendations.length > 0 ? (
+            {trustHealth?.recommendations &&
+            trustHealth.recommendations.length > 0 ? (
               <ul className="space-y-2">
-                {trustHealth.recommendations.map((rec, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                    <span className="text-primary-500">•</span>
-                    {rec}
-                  </li>
-                ))}
+                {trustHealth.recommendations.map(
+                  (rec: string, index: number) => (
+                    <li
+                      key={index}
+                      className="flex items-start gap-2 text-sm text-gray-700"
+                    >
+                      <span className="text-primary-500">•</span>
+                      {rec}
+                    </li>
+                  ),
+                )}
               </ul>
             ) : (
               <p className="text-sm text-gray-500">
@@ -137,21 +154,20 @@ export default function DashboardPage() {
           {/* Recent Introductions */}
           <div className="card">
             <h2 className="mb-4 text-lg font-semibold">Recent Introductions</h2>
-            <div className="text-center text-sm text-gray-500 py-8">
+            <div className="py-8 text-center text-sm text-gray-500">
               No recent introductions. Start connecting!
             </div>
           </div>
 
-          {/* Network Activity */}
-          <div className="card">
-            <h2 className="mb-4 text-lg font-semibold">Network Activity</h2>
-            <div className="text-center text-sm text-gray-500 py-8">
-              Activity feed coming soon
-            </div>
-          </div>
+          {/* Engagement Heatmap */}
+          <EngagementHeatmap entityId={entityId} />
+        </div>
+
+        {/* Opportunity Feed - Full Width */}
+        <div className="mt-8">
+          <OpportunityFeed />
         </div>
       </div>
     </div>
-  );
+  )
 }
-
